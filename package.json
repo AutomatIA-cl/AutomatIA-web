@@ -1,0 +1,19 @@
+{
+  "name": "automatia-web",
+  "version": "1.0.0",
+  "description": "Sitio Web Oficial de AutomatIA — Agencia de Desarrollo de Negocios & Escalabilidad Digital con IA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "automatia",
+    "ia",
+    "inteligencia-artificial",
+    "escalabilidad",
+    "landing-page"
+  ],
+  "author": "AutomatIA",
+  "license": "ISC"
+}

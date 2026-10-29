@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomatIA — Agencia de Desarrollo de Negocios & Escalabilidad Digital</title>
+    <meta name="description" content="AutomatIA: Agencia de desarrollo de negocios y escalabilidad digital. Construimos el sistema operativo inteligente de tu empresa con IA. Diagnóstico gratis.">
+    <meta name="theme-color" content="#0A1628">
+
+    <!-- Open Graph / Redes sociales -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CL">
+    <meta property="og:title" content="AutomatIA — El Futuro se hace Presente">
+    <meta property="og:description" content="Construimos el sistema operativo inteligente de tu empresa para que la IA trabaje para ti. Diagnóstico gratuito.">
+    <meta property="og:image" content="assets/Banner_Portada_Transparente.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/Isotipo.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#0A1628',        // Navy Principal
+                            navyDark: '#050B14',    // Navy Oscuro
+                            teal: '#00B8A9',        // Teal Acento
+                            tealLight: '#32e3d5',   // Teal Luminoso
+                            gold: '#F5A623',        // Dorado Énfasis
+                            light: '#EEF6F5',       // Claro Fondo
+                            silver: '#C8D0DC',      // Plata Secundaria
+                            whatsapp: '#25D366',    // Verde WhatsApp
+                            whatsappHover: '#20BA5A'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Playfair Display', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Compensa la navbar fija al saltar a un ancla */
+        html { scroll-padding-top: 5.5rem; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A1628; }
+        ::-webkit-scrollbar-thumb { background: #00B8A9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F5A623; }
+
+        /* Contenedor del video de fondo sincronizado con scroll */
+        #fixed-video-bg {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -20;
+            overflow: hidden;
+            pointer-events: none;
+            background-color: #050B14;
+        }
+
+        #bg-scroll-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* Canvas de alto rendimiento que dibuja el frame exacto del video */
+        #bg-scroll-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        /* Overlay semi-transparente sutil para garantizar legibilidad preservando total claridad visual del video */
+        #bg-ambient-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            pointer-events: none;
+            background: linear-gradient(to bottom, 
+                rgba(5, 11, 20, 0.38) 0%, 
+                rgba(10, 22, 40, 0.42) 40%, 
+                rgba(5, 11, 20, 0.62) 100%
+            );
+        }
+
+        /* Vidrios Difuminados ACLARADOS (Glassmorphism de alta claridad y transparencia) */
+        .glass-panel {
+            background: rgba(10, 22, 40, 0.42);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(200, 208, 220, 0.22);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+        }
+
+        .glass-panel:hover {
+            background: rgba(10, 22, 40, 0.52);
+            border-color: rgba(0, 184, 169, 0.45);
+        }
+
+        .glass-panel-gold {
+            background: rgba(245, 166, 35, 0.07);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(245, 166, 35, 0.48);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-panel-teal {
+            background: rgba(0, 184, 169, 0.06);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 184, 169, 0.42);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animaciones */
+        @keyframes pulse-teal {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.25); opacity: 0.65; }
+        }
+        .animate-pulse-teal { animation: pulse-teal 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+        @keyframes float-whatsapp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float-wa {
+            animation: float-whatsapp 3s ease-in-out infinite;
+        }
+
+        @keyframes ping-slow {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            70% { transform: scale(1.3); opacity: 0; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+        .animate-ping-slow {
+            animation: ping-slow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .animate-pulse, .animate-pulse-teal, .animate-float-wa, .animate-ping-slow { animation: none; }
+            #bg-zoom-image { transition: none; }
+        }
+    </style>
+</head>
+<body class="bg-brand-navyDark text-brand-light font-sans antialiased selection:bg-brand-teal selection:text-brand-navy overflow-x-hidden relative">
+
+    <!-- FONDO FIJO CON VIDEO RESPONSIVO (60FPS CONTINUO EN MÓVIL / SYNC EN DESKTOP) -->
+    <div id="fixed-video-bg" aria-hidden="true">
+        <video id="bg-scroll-video" 
+               src="assets/Video_Hero_definitivo.mp4" 
+               poster="assets/Frame_intermedio_helipuerto.jpg"
+               playsinline 
+               webkit-playsinline
+               muted 
+               loop
+               preload="auto" 
+               class="w-full h-full object-cover">
+        </video>
+    </div>
+    <div id="bg-ambient-overlay" aria-hidden="true"></div>
+
+    <!-- NAVBAR (ENCABEZADO CON NUEVO LOGO Y MENÚ) -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-brand-navy/90 backdrop-blur-md border-b border-brand-teal/20 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo AutomatIA en Navbar -->
+            <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-teal rounded-lg p-1">
+                <img src="assets/Banner_Portada_Transparente.png" 
+                     onerror="this.onerror=null; this.src='../../assets/Banner_Portada_Transparente.png'" 
+                     alt="AutomatIA — Claridad, Escala, Control, Gobernanza" 
+                     class="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_2px_10px_rgba(0,184,169,0.25)]">
+            </a>
+
+            <!-- Nuevo menú según nuevo orden -->
+            <div class="hidden lg:flex items-center space-x-7 text-xs font-semibold uppercase tracking-wider text-brand-silver">
+                <a href="#servicios" class="hover:text-brand-teal transition-colors">Servicios</a>
+                <a href="#regalo" class="text-brand-gold hover:text-yellow-400 transition-colors flex items-center gap-1.5 font-bold">
+                    <span class="inline-block w-2 h-2 rounded-full bg-brand-gold animate-ping-slow"></span>
+                    Regalo Exclusivo
+                </a>
+                <a href="#nosotros" class="hover:text-brand-teal transition-colors">Quiénes Somos</a>
+                <a href="#metodologia" class="hover:text-brand-teal transition-colors">Metodología</a>
+                <a href="#portafolio" class="hover:text-brand-teal transition-colors">Portafolio</a>
+                <a href="#gobernanza" class="hover:text-brand-teal transition-colors">Gobernanza</a>
+                <a href="#contacto" class="hover:text-brand-teal transition-colors">Contacto</a>
+            </div>
+
+            <!-- Botón CTA Encabezado -->
+            <div class="hidden sm:block">
+                <button onclick="openModal()" class="bg-brand-teal hover:bg-teal-400 text-brand-navy font-bold px-5 py-2.5 rounded-sm text-xs uppercase tracking-wider transition-all duration-200 shadow-[0_0_15px_rgba(0,184,169,0.3)] hover:shadow-[0_0_20px_rgba(0,184,169,0.5)] active:scale-95">
+                    Diagnóstico gratis →
+                </button>
+            </div>
+
+            <!-- Botón móvil -->
+            <button id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false" class="lg:hidden text-brand-silver hover:text-white focus:outline-none p-2 rounded-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-navyDark/95 backdrop-blur-md border-b border-brand-teal/20 px-6 py-4 space-y-3 text-xs uppercase font-semibold text-brand-silver shadow-2xl">
+            <a href="#servicios" class="block py-2 hover:text-brand-teal">Servicios</a>
+            <a href="#regalo" class="block py-2 text-brand-gold font-bold flex items-center gap-2">
+                <span>🎁</span> Regalo Exclusivo
+            </a>
+            <a href="#nosotros" class="block py-2 hover:text-brand-teal">Quiénes Somos</a>
+            <a href="#metodologia" class="block py-2 hover:text-brand-teal">Metodología</a>
+            <a href="#portafolio" class="block py-2 hover:text-brand-teal">Portafolio</a>
+            <a href="#gobernanza" class="block py-2 hover:text-brand-teal">Gobernanza</a>
+            <a href="#contacto" class="block py-2 hover:text-brand-teal">Contacto</a>
+            <button onclick="openModal()" class="w-full mt-2 bg-brand-teal hover:bg-teal-400 text-brand-navy font-bold py-3 rounded-sm text-center">
+                Diagnóstico gratis →
+            </button>
+        </div>
+    </nav>
+
+    <!-- SECCIÓN 1 - HERO -->
+    <section class="relative min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 flex flex-col items-center">
+            
+            <!-- Pastilla Superior -->
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-brand-navy/80 border border-brand-teal/50 mb-6 backdrop-blur-md shadow-[0_0_20px_rgba(0,184,169,0.2)]">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-teal animate-pulse-teal"></span>
+                <span class="text-[11px] sm:text-xs uppercase tracking-widest text-brand-teal font-bold">
+                    AGENCIA DE DESARROLLO DE NEGOCIOS &amp; ESCALABILIDAD DIGITAL
+                </span>
+            </div>
+
+            <!-- NOMBRE AUTOMATIA REEMPLAZANDO EL BANNER (TIPOGRÁFICO, CENTRADO Y DE GRAN IMPACTO) -->
+            <div class="my-4 sm:my-6 w-full flex justify-center">
+                <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-extrabold tracking-tight drop-shadow-[0_8px_30px_rgba(0,0,0,0.7)] select-none">
+                    <span class="text-white drop-shadow-[0_0_25px_rgba(255,255,255,0.25)]">Automat</span><span class="text-brand-gold drop-shadow-[0_0_30px_rgba(245,166,35,0.45)]">IA</span>
+                </h1>
+            </div>
+
+            <!-- PREGUNTAS EN EL MISMO TAMAÑO, FUENTE Y ESTILO EN CURSIVA (AMBAS IGUAL DE IMPORTANTES) -->
+            <div class="space-y-4 mb-6 max-w-4xl w-full text-center">
+                <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] font-normal leading-snug">
+                    ¿Eres emprendedor?...
+                </p>
+                <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] font-normal leading-snug">
+                    …¿Tienes un negocio, o la idea para uno?
+                </p>
+                <p class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-brand-gold tracking-tight pt-2 drop-shadow-[0_4px_18px_rgba(245,166,35,0.5)]">
+                    ¡¡ Imagina el viaje !!
+                </p>
+                
+                <!-- BAJADA: Acompañamos e impulsamos tu proyecto EN CURSIVA, COLOR BLANCO Y TAMAÑO SIMILAR A AUTOMATIA -->
+                <p class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif italic font-normal text-white drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] tracking-tight leading-tight text-center my-4">
+                    Acompañamos e impulsamos tu proyecto.
+                </p>
+            </div>
+
+            <!-- TEXTO DESCRIPTIVO CENTRAL (ACTUALIZADO EN DOS LÍNEAS SEGÚN REQUERIMIENTO) -->
+            <div class="max-w-4xl w-full text-center mb-10 glass-panel p-6 sm:p-8 rounded-2xl border border-brand-teal/30">
+                <p class="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed">
+                    Tú diriges, nosotros construimos, la IA trabaja para ti.
+                </p>
+                <p class="text-xs sm:text-sm md:text-base text-brand-gold font-normal tracking-wide mt-2">
+                    Ventas - Captación y Atención de Clientes - Agendamiento - Recordatorios - Bases de Datos y Gestión.
+                </p>
+            </div>
+
+            <!-- Botones CTA Hero -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-12">
+                <button onclick="openModal()" class="w-full sm:w-auto bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-8 py-4 rounded-sm text-sm uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(245,166,35,0.4)] hover:shadow-[0_0_35px_rgba(245,166,35,0.6)] active:scale-95">
+                    Diagnóstico gratuito →
+                </button>
+                <a href="#servicios" class="w-full sm:w-auto bg-brand-navyDark/60 hover:bg-brand-teal/20 text-brand-teal border border-brand-teal/50 hover:border-brand-teal font-semibold px-8 py-4 rounded-sm text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 backdrop-blur-sm">
+                    Ver servicios ↓
+                </a>
+            </div>
+
+            <!-- Pilares del Banner -->
+            <div class="flex flex-wrap justify-center items-center gap-3 sm:gap-6 border-t border-brand-teal/25 pt-8 w-full max-w-3xl">
+                <span class="px-4 py-1.5 rounded-full border border-brand-silver/30 bg-brand-navyDark/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-silver font-semibold">Gobernanza</span>
+                <span class="text-brand-teal">•</span>
+                <span class="px-4 py-1.5 rounded-full border border-brand-silver/30 bg-brand-navyDark/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-silver font-semibold">Claridad</span>
+                <span class="text-brand-teal">•</span>
+                <span class="px-4 py-1.5 rounded-full border border-brand-silver/30 bg-brand-navyDark/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-silver font-semibold">Control</span>
+                <span class="text-brand-teal">•</span>
+                <span class="px-4 py-1.5 rounded-full border border-brand-silver/30 bg-brand-navyDark/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-silver font-semibold">Escala</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2 - SOLUCIONES Y SERVICIOS -->
+    <section id="servicios" class="py-24 relative border-t border-brand-teal/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-brand-teal font-bold block mb-2">SECCIÓN 2 · NUESTRAS SOLUCIONES</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-4">
+                    Soluciones diseñadas a la medida y <span class="text-brand-gold">de bajo costo</span>
+                </h2>
+                <p class="text-brand-silver text-base sm:text-lg font-light leading-relaxed">
+                    Aceleramos tu crecimiento, construimos ecosistemas que convierten clientes y escalan operatividad.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                
+                <!-- COLUMNA 1: Emprendedores & Nuevos Negocios -->
+                <div class="glass-panel p-8 sm:p-10 rounded-2xl border-t-4 border-t-brand-teal hover:shadow-[0_0_35px_rgba(0,184,169,0.25)] transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-brand-teal text-xs font-bold uppercase tracking-wider">Ecosistema Inicial</span>
+                            <span class="bg-brand-teal/20 text-brand-teal text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase border border-brand-teal/30">Lanzamiento</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2 uppercase tracking-wide">
+                            Servicios Emprendedores <br><span class="text-brand-teal">&amp; Nuevos Negocios</span>
+                        </h3>
+                        <p class="text-brand-silver/90 text-sm font-light mb-8">
+                            El ecosistema inicial para capturar valor, clientes y salir al mercado con fuerza.
+                        </p>
+                        
+                        <ul class="space-y-3.5 text-brand-silver text-sm">
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Identidad de Marca:</strong> Logo, colorimetría, gráfica, eslogan y bajadas</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi primera WEB</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi primer Landing Page con embudo de venta para captura de Leads</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Marketing Digital &amp; Herramientas de Neuromarketing</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Agentes automatizados para generar presencia en Redes Sociales y LinkedIn</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Plan de Community Manager</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>WhatsApp Business Automatizado e integrado a tu WEB</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Presencia en Google y en Meta con SEO y ADS</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Ecommerce y Estrategia Digital de Ventas</span></li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal()" class="w-full mt-10 bg-brand-navy/80 border border-brand-teal text-brand-teal hover:bg-brand-teal hover:text-brand-navy font-bold py-3.5 rounded transition-colors uppercase text-xs tracking-wider shadow-md">
+                        Consulta Gratis →
+                    </button>
+                </div>
+
+                <!-- COLUMNA 2: Micro & Pymes -->
+                <div class="glass-panel-gold p-8 sm:p-10 rounded-2xl border-t-4 border-t-brand-gold hover:shadow-[0_0_35px_rgba(245,166,35,0.25)] transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-brand-gold text-xs font-bold uppercase tracking-wider">Escala &amp; Operatividad</span>
+                            <span class="bg-brand-gold/20 text-brand-gold text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase border border-brand-gold/40">IA &amp; Procesos</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2 uppercase tracking-wide">
+                            Servicios Micro <br><span class="text-brand-gold">&amp; Pymes</span>
+                        </h3>
+                        <p class="text-brand-silver/90 text-sm font-light mb-8">
+                            Arquitectura operativa e Inteligencia Artificial para escalar sin fricción.
+                        </p>
+                        
+                        <ul class="space-y-4 text-brand-silver text-sm">
+                            <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Diagnóstico de Automatización de Procesos</strong> (Ventas, Inventarios, Finanzas, Producción, Logística, Recursos Humanos, Atención Clientes).</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Automatización de Proceso Único.</strong></span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Agentes de IA a tu Medida</strong> para cada proceso.</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Génesis Operativa</strong> (Desde cero a sistema operativo completo).</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Stack Automatización Empresarial</strong> (Acompañamiento escalable a la medida de tu Negocio).</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Arquitectura y Tecnología de Business Inteligence</strong> (Gobernanza, gestión y análisis de datos en tiempo real para una toma de decisiones eficiente).</span></li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openModal()" class="w-full mt-10 bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold py-3.5 rounded transition-colors uppercase text-xs tracking-wider shadow-lg">
+                        Escalar mi Negocio →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 3 - REGALO EXCLUSIVO POR TIEMPO LIMITADO -->
+    <section id="regalo" class="py-16 relative border-y border-brand-gold/50 overflow-hidden bg-brand-navyDark/85 backdrop-blur-md shadow-2xl">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div class="text-center md:text-left flex-1">
+                <span class="inline-block px-3 py-1 bg-brand-gold/20 border border-brand-gold/50 text-brand-gold text-[10px] font-bold uppercase tracking-widest rounded-full mb-4 animate-pulse">
+                    Regalo Exclusivo por Tiempo Limitado
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mb-4 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                    Obtén tu Primera <span class="text-brand-gold border-b-2 border-brand-gold">Máquina de Ventas</span>
+                </h2>
+                <p class="text-brand-silver text-sm sm:text-base font-light max-w-lg mx-auto md:mx-0 leading-relaxed">
+                    Usa gratis nuestro <strong>Creador de Landing Pages con IA</strong>. Diseña en 2 minutos una web de alta conversión con metodología AIDA, botón de WhatsApp y código HTML listo para descargar y publicar.
+                </p>
+            </div>
+            
+            <div class="w-full md:w-auto text-center md:text-right flex flex-col items-center md:items-end justify-center gap-2">
+                <a href="creador-landing" class="group relative inline-flex items-center justify-center w-full md:w-auto px-8 py-5 font-bold text-brand-navy bg-brand-gold hover:bg-yellow-500 rounded-lg shadow-[0_0_30px_rgba(245,166,35,0.4)] hover:shadow-[0_0_50px_rgba(245,166,35,0.7)] transition-all duration-300 active:scale-95">
+                    <span class="relative text-sm uppercase tracking-wider flex items-center gap-2">
+                        <span>✨ Crear mi Landing Gratis</span>
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </span>
+                </a>
+                <button type="button" onclick="openGiftModal()" class="text-xs text-brand-silver/80 hover:text-brand-gold underline font-medium transition-colors pt-1">
+                    O solicita una copia por correo →
+                </button>
+                <p class="text-[11px] text-brand-gold/90 font-medium tracking-wide">
+                    *Incluye Archivo HTML descargable y código listo*
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: 01. QUIÉNES SOMOS -->
+    <section id="nosotros" class="py-24 relative border-t border-brand-teal/20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Logo institucional en Quiénes Somos -->
+            <div class="flex justify-center mb-6">
+                <img src="assets/Banner_Portada_Transparente.png" 
+                     onerror="this.onerror=null; this.src='../../assets/Banner_Portada_Transparente.png'" 
+                     alt="AutomatIA Logo" 
+                     class="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_4px_15px_rgba(0,184,169,0.3)]">
+            </div>
+
+            <div class="text-center max-w-4xl mx-auto">
+                <span class="text-xs uppercase tracking-widest text-brand-teal font-bold block mb-2">01. Quiénes Somos</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-6 leading-tight">
+                    AutomatIA no es una agencia de software.<br>
+                    <span class="text-brand-gold">Es tu socio en la transformación.</span>
+                </h2>
+                <p class="text-brand-silver text-base sm:text-xl font-light leading-relaxed">
+                    Somos la firma de asesoría y escalabilidad digital diseñada para emprendedores, microempresas y pymes que quieren crecer en ventas, sin contratar más personas y sin perder el control de sus decisiones.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: 02. METODOLOGÍA -->
+    <section id="metodologia" class="py-24 relative border-t border-brand-teal/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-brand-teal font-bold block mb-2">02. Metodología</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-4">
+                    El Framework de 8 Dimensiones:
+                </h2>
+                <p class="text-brand-silver text-sm sm:text-base font-light leading-relaxed">
+                    Antes que las soluciones está el diagnóstico, necesitamos entender cómo opera tu negocio, dónde están los cuellos de botella reales y qué datos tienes disponibles.
+                </p>
+            </div>
+
+            <!-- Flow Bar de 8 Pasos -->
+            <div class="mb-12 overflow-x-auto pb-4">
+                <div class="flex items-center justify-between min-w-[850px] bg-brand-navyDark/70 backdrop-blur-md p-4 rounded-lg border border-brand-teal/30 text-[11px] font-bold text-brand-teal uppercase tracking-widest shadow-inner">
+                    <span>01. Comprender</span> <span>→</span>
+                    <span>02. Diagnosticar</span> <span>→</span>
+                    <span>03. Diseñar</span> <span>→</span>
+                    <span>04. Intervenir</span> <span>→</span>
+                    <span>05. Ejecutar</span> <span>→</span>
+                    <span>06. Medir</span> <span>→</span>
+                    <span>07. Reflexionar</span> <span>→</span>
+                    <span>08. Reconfigurar</span>
+                </div>
+            </div>
+
+            <!-- 8 Dimensiones Cards (Vidrios Difuminados Aclarados) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">01 · Comprender</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Antes de proponer, escuchamos. Analizamos tu contexto estratégico, tu cultura interna y las áreas donde la IA puede generar valor real.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">02 · Diagnosticar</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Evaluamos la madurez digital, la calidad de tus datos y las brechas existentes antes de construir cualquier solución.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">03 · Diseñar</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Definimos juntos los casos de uso, la arquitectura de datos y el mapa de procesos optimizados.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">04 · Intervenir</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Preparamos a las personas y los procesos. La tecnología sin gestión del cambio solo genera resistencia.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">05 · Ejecutar</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Desplegamos herramientas, modelos y agentes de IA garantizando que el negocio no se detenga.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">06 · Medir</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Monitoreamos métricas concretas: eficiencia operativa, tiempo recuperado, costo reducido y ROI real.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">07 · Reflexionar</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Analizamos los resultados contigo para decidir qué ajustar, qué escalar y qué eliminar.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-brand-gold text-xs font-bold block mb-1">08 · Reconfigurar</span>
+                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Ajustamos los modelos y estrategias según lo aprendido para reiniciar el ciclo de mejora continua.</p>
+                </div>
+            </div>
+
+            <!-- Botón Diagnóstico Gratis en Metodología -->
+            <div class="text-center">
+                <button onclick="openModal()" class="bg-brand-teal hover:bg-teal-400 text-brand-navy font-bold px-8 py-3.5 rounded text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,184,169,0.3)] hover:shadow-[0_0_30px_rgba(0,184,169,0.5)] active:scale-95">
+                    Diagnóstico Gratis →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: 03. PORTAFOLIO -->
+    <section id="portafolio" class="py-24 relative border-t border-brand-teal/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-brand-teal font-bold block mb-2">03. Portafolio</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-4">
+                    Desde el primer diagnóstico<br>
+                    <span class="text-brand-gold">hasta el sistema operativo completo.</span>
+                </h2>
+                <p class="text-brand-silver text-sm sm:text-base font-light">
+                    Proyectos de implementación puntual con entregables concretos y plazos definidos. Sin retención forzada ni contratos eternos.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                
+                <!-- 01 Diagnóstico & Primeras Herramientas -->
+                <div class="glass-panel p-8 rounded-xl flex flex-col justify-between border-t-2 border-t-brand-teal hover:border-brand-teal transition-all">
+                    <div>
+                        <span class="text-brand-teal text-xs font-bold block mb-2">01</span>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">Diagnóstico &amp; Primeras Herramientas</h3>
+                        <p class="text-brand-silver/90 text-xs font-light mb-6 leading-relaxed">
+                            Auditamos tus procesos, identificamos oportunidades de alto impacto y entregamos un roadmap priorizado con el que puedes actuar de inmediato.
+                        </p>
+                    </div>
+                    <div class="border-t border-brand-silver/20 pt-4 text-xs font-semibold text-brand-silver space-y-1 bg-brand-navyDark/50 p-3 rounded backdrop-blur-sm">
+                        <p>⏱ Tiempo: 1–2 semanas</p>
+                        <p class="text-brand-teal font-bold">💰 Inversión desde los USD 20 (CLP$ 20.000)</p>
+                    </div>
+                </div>
+
+                <!-- 02 Automatización Proceso Único -->
+                <div class="glass-panel p-8 rounded-xl flex flex-col justify-between border-t-2 border-t-brand-teal hover:border-brand-teal transition-all">
+                    <div>
+                        <span class="text-brand-teal text-xs font-bold block mb-2">02</span>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">Automatización Proceso Único</h3>
+                        <p class="text-brand-silver/90 text-xs font-light mb-6 leading-relaxed">
+                            Convertimos un proceso específico (leads, ventas, facturación o onboarding) en un flujo automatizado que opera solo e integrado.
+                        </p>
+                    </div>
+                    <div class="border-t border-brand-silver/20 pt-4 text-xs font-semibold text-brand-silver space-y-1 bg-brand-navyDark/50 p-3 rounded backdrop-blur-sm">
+                        <p>⏱ Tiempo: 2–4 semanas</p>
+                        <p class="text-brand-teal font-bold">💰 Inversión desde los USD 100 (CLP$ 100.000)</p>
+                    </div>
+                </div>
+
+                <!-- 03 Agente de IA a Medida -->
+                <div class="glass-panel p-8 rounded-xl flex flex-col justify-between border-t-2 border-t-brand-teal hover:border-brand-teal transition-all">
+                    <div>
+                        <span class="text-brand-teal text-xs font-bold block mb-2">03</span>
+                        <h3 class="text-xl font-serif font-bold text-white mb-3">Agente de IA a Medida</h3>
+                        <p class="text-brand-silver/90 text-xs font-light mb-6 leading-relaxed">
+                            Un asistente inteligente diseñado con un rol específico para tu negocio: atención, calificación, análisis de datos o soporte interno.
+                        </p>
+                    </div>
+                    <div class="border-t border-brand-silver/20 pt-4 text-xs font-semibold text-brand-silver space-y-1 bg-brand-navyDark/50 p-3 rounded backdrop-blur-sm">
+                        <p>⏱ Tiempo: 3–6 semanas</p>
+                        <p class="text-brand-teal font-bold">💰 Inversión desde los USD 300 (CLP$ 300.000)</p>
+                    </div>
+                </div>
+
+                <!-- Servicio Exclusivo · 04 Estrella (Génesis Operativa) -->
+                <div class="glass-panel-gold p-8 rounded-xl lg:col-span-3 flex flex-col justify-between border-2 border-brand-gold shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-16 -top-16 w-48 h-48 bg-brand-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-brand-gold text-xs font-bold uppercase tracking-wider">Servicio Exclusivo · 04</span>
+                            <span class="bg-brand-gold text-brand-navy text-[10px] font-extrabold px-3 py-1 rounded-full uppercase shadow">★ Estrella</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-3">
+                            Génesis Operativa · Setup Completo
+                        </h3>
+                        <p class="text-brand-silver text-sm sm:text-base font-light mb-6 max-w-4xl leading-relaxed">
+                            Los 4 módulos completos: marca, motor de ventas, arteria operativa y tablero de control. El sistema operativo fundacional de tu negocio implementado de principio a fin. Tú pones la visión; nosotros construimos la empresa que la ejecuta.
+                        </p>
+                    </div>
+                    <div class="border-t border-brand-gold/30 pt-4 text-xs sm:text-sm font-semibold text-brand-silver flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <p>⏱ Tiempo: 6–10 semanas</p>
+                        <p class="text-brand-gold font-bold text-base sm:text-lg">💰 Inversión desde los USD 500 (CLP$ 500.000)</p>
+                        <button onclick="openModal()" class="bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-6 py-2.5 rounded text-xs uppercase tracking-wider transition-all shadow">
+                            Solicitar Génesis Operativa →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 05 - Modelo de Escalabilidad Mensual — Módulo 4 continuo (Retainer) -->
+            <div class="glass-panel p-8 sm:p-10 rounded-2xl border border-brand-teal/40 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+                <div class="flex items-start sm:items-center gap-4">
+                    <span class="text-4xl text-brand-teal">🔄</span>
+                    <div>
+                        <span class="text-brand-teal text-xs font-bold uppercase tracking-widest block mb-1">05 · Continuidad &amp; Optimización</span>
+                        <h4 class="text-xl font-serif font-bold text-white mb-2">
+                            Modelo de Escalabilidad Mensual — Módulo 4 continuo
+                        </h4>
+                        <p class="text-brand-silver text-xs sm:text-sm font-light max-w-3xl leading-relaxed">
+                            Ofrecemos un servicio de Gobernanza y Optimización continua a partir del segundo mes: Mantenimiento de agentes, auditoría mensual de métricas, reportes, ajustes y reconfiguración constante de microprocesos (ventas, inventarios, análisis, etc).
+                        </p>
+                    </div>
+                </div>
+                <button onclick="openModal()" class="w-full md:w-auto bg-brand-teal hover:bg-teal-400 text-brand-navy font-bold px-7 py-3.5 rounded text-xs uppercase tracking-wider whitespace-nowrap transition-all shadow-md active:scale-95">
+                    Consultar Retainer →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 4 - GOBERNANZA -->
+    <section id="gobernanza" class="py-24 relative border-t border-brand-teal/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs uppercase tracking-widest text-brand-teal font-bold block mb-2">SECCIÓN 4 · GOBERNANZA &amp; CONFIANZA</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-4 leading-tight">
+                    IA sin gobernanza es un riesgo.<br>
+                    <span class="text-brand-teal">IA con AutomatIA es una ventaja competitiva.</span>
+                </h2>
+                <p class="text-brand-silver text-sm sm:text-base font-light">
+                    Integramos desde el primer día los estándares que garantizan un despliegue responsable y auditable.
+                </p>
+            </div>
+
+            <!-- 8 Tarjetas de Gobernanza (Vidrios Aclarados) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-12 text-center">
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🎯</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Visión Estratégica</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Impacto operativo y ROI.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🗃️</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Calidad de Datos</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Datos limpios y confiables.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🔄</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Adopción Cultural</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Gestión efectiva del cambio.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🛡️</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Ética &amp; Seguridad</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Privacidad y cumplimiento.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🏗️</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Arquitectura Cloud</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Procesamiento a escala.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🤖</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Agentes Operativos</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Flujos inteligentes 24/7.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">📊</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Medición de Impacto</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Métricas continuas de retorno.</p>
+                </div>
+                <div class="glass-panel p-5 rounded-xl hover:border-brand-teal/50 transition-all">
+                    <span class="text-2xl mb-2 block">🎓</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-white mb-1">Desarrollo Talentos</h4>
+                    <p class="text-[11px] sm:text-xs text-brand-silver/85 font-light">Capacitación analítica.</p>
+                </div>
+            </div>
+
+            <!-- Gran Barrera de Entrada -->
+            <div class="glass-panel-gold p-8 rounded-2xl text-center max-w-3xl mx-auto border border-brand-gold/40 shadow-xl">
+                <p class="text-sm sm:text-base text-brand-silver leading-relaxed font-normal">
+                    AutomatIA es la única firma del mercado que combina estrategia corporativa, disciplina operativa y gobernanza de IA.
+                </p>
+                <p class="text-base sm:text-lg font-serif italic text-brand-gold font-bold mt-2">
+                    Esa combinación es nuestra gran barrera de entrada.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 5 - DIAGNÓSTICO GRATUITO Y FORMULARIO -->
+    <section id="contacto" class="py-24 relative border-t border-brand-teal/20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            <h2 class="text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-serif italic font-normal text-white mb-6 leading-tight drop-shadow-[0_4px_25px_rgba(0,0,0,0.85)]">
+                Aterriza en el futuro con Nosotros !!
+            </h2>
+            <p class="text-brand-silver/90 text-sm sm:text-base max-w-2xl mx-auto font-light leading-relaxed mb-10">
+                Cada mes sin un sistema inteligente es un mes que tu competencia avanza y tu energía se consume en tareas manuales.
+            </p>
+
+            <div class="glass-panel-gold rounded-2xl p-8 sm:p-12 max-w-2xl mx-auto text-left relative overflow-hidden shadow-[0_0_50px_rgba(245,166,35,0.2)]">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-serif font-bold text-white mb-2">Diagnóstico Gratuito</h3>
+                    <p class="text-brand-silver text-sm font-light">
+                        Agendemos 30 minutos para mapear dónde se rompe tu flujo operativo y te diré exactamente cómo la IA puede resolverlo.
+                    </p>
+                </div>
+
+                <form id="funnel-form" class="space-y-4">
+                    <input type="hidden" name="origen" value="Formulario final - Diagnóstico gratuito">
+                    <input type="hidden" name="destinatario" value="consultora.automatia@gmail.com">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
+                    
+                    <div>
+                        <label for="funnel-nombre" class="block text-xs uppercase tracking-wider text-brand-teal font-bold mb-1">Nombre Completo</label>
+                        <input id="funnel-nombre" name="nombre" type="text" autocomplete="name" required placeholder="Tu nombre y apellido" class="w-full bg-brand-navy/90 border border-brand-silver/30 rounded px-4 py-3 text-white placeholder-brand-silver/40 focus:outline-none focus:border-brand-teal transition-colors">
+                    </div>
+                    <div>
+                        <label for="funnel-email" class="block text-xs uppercase tracking-wider text-brand-teal font-bold mb-1">Correo Electrónico Corporativo</label>
+                        <input id="funnel-email" name="email" type="email" autocomplete="email" required placeholder="contacto@tuempresa.com" class="w-full bg-brand-navy/90 border border-brand-silver/30 rounded px-4 py-3 text-white placeholder-brand-silver/40 focus:outline-none focus:border-brand-teal transition-colors">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold py-4 px-6 rounded text-sm uppercase tracking-wider transition-all shadow-lg mt-4 disabled:opacity-60 disabled:cursor-wait active:scale-95">
+                        Agendar mi diagnóstico →
+                    </button>
+                    <p class="form-error hidden text-[11px] text-center text-red-300"></p>
+                    <p class="text-[11px] text-center text-brand-silver/70 pt-2 font-medium">
+                        Sin venta disfrazada. Solo claridad estratégica.
+                    </p>
+                </form>
+
+                <div id="form-success" class="hidden absolute inset-0 bg-brand-navy/95 backdrop-blur-md flex flex-col items-center justify-center p-6 sm:p-8 text-center border border-brand-gold/40">
+                    <span class="text-4xl text-brand-teal mb-3">✓</span>
+                    <h4 class="text-xl sm:text-2xl font-serif font-bold text-white mb-2">¡Solicitud Registrada con Éxito!</h4>
+                    <p class="text-brand-silver text-xs sm:text-sm max-w-md mb-5 leading-relaxed">
+                        Te contactaremos a la brevedad. Para asegurar tu horario de 30 minutos de inmediato:
+                    </p>
+                    <div class="flex flex-col gap-2.5 w-full max-w-sm">
+                        <a href="https://wa.me/56962248574?text=Hola%20AutomatIA%2C%20acabo%20de%20solicitar%20mi%20diagn%C3%B3stico%20gratuito%20y%20quiero%20coordinar%20mi%20horario." target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-5 py-3 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95">
+                            <span>📅 Coordinar Horario por WhatsApp ↗</span>
+                        </a>
+                        <button onclick="resetForm()" type="button" class="bg-brand-navyDark hover:bg-slate-800 text-brand-silver hover:text-white border border-brand-silver/20 font-semibold px-4 py-2.5 rounded-lg text-xs tracking-wider transition-colors">
+                            Listo, esperaré su contacto por correo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-navyDark/90 backdrop-blur-md py-16 border-t border-brand-teal/20 text-brand-silver">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12 items-start">
+                <div class="md:col-span-7 space-y-4">
+                    <!-- Logo AutomatIA en Footer -->
+                    <div class="flex items-center gap-3">
+                        <img src="assets/Banner_Portada_Transparente.png" 
+                             onerror="this.onerror=null; this.src='../../assets/Banner_Portada_Transparente.png'" 
+                             alt="AutomatIA" 
+                             class="h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,184,169,0.2)]">
+                    </div>
+                    <p class="text-xs sm:text-sm font-light max-w-md text-brand-silver/90 leading-relaxed">
+                        Agencia de asesoría y escalabilidad digital. Construimos el sistema operativo de tu negocio con Inteligencia Artificial.
+                    </p>
+                    <p class="text-brand-gold font-serif italic text-sm font-medium">"El Futuro se hace Presente con AutomatIA"</p>
+                </div>
+
+                <div class="md:col-span-5 space-y-3 text-xs sm:text-sm md:text-right">
+                    <span class="text-white font-bold uppercase tracking-wider block font-mono text-[12px] text-brand-teal">Contacto</span>
+                    <ul class="space-y-2 font-light">
+                        <li class="text-white font-medium">AUTOMATIA SpA</li>
+                        <li class="text-brand-silver/90">Santiago, Chile</li>
+                        <li>
+                            <a href="https://wa.me/56962248574?text=Hola%20AutomatIA%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener noreferrer" class="text-brand-gold hover:text-yellow-400 font-semibold inline-flex items-center gap-1.5 md:justify-end">
+                                <span>WhatsApp: +56 9 6224 8574</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-brand-silver/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-light">
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+                    <p>© 2026 AutomatIA SpA. Todos los derechos reservados.</p>
+                    <span class="hidden sm:inline text-brand-silver/30">|</span>
+                    <div class="flex items-center gap-3 text-[11px]">
+                        <a href="privacidad" class="hover:text-brand-teal transition-colors underline sm:no-underline">Privacidad</a>
+                        <span>•</span>
+                        <a href="terminos" class="hover:text-brand-teal transition-colors underline sm:no-underline">Términos</a>
+                        <span>•</span>
+                        <a href="creador-landing" class="text-brand-gold hover:text-yellow-400 font-semibold">Creador Landing IA</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 text-brand-silver/70 uppercase tracking-widest text-[11px] font-medium">
+                    <span>Gobernanza</span> • <span>Claridad</span> • <span>Control</span> • <span>Escala</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOTÓN FLOTANTE WHATSAPP (ABAJO A LA DERECHA) -->
+    <aside aria-label="Contacto por WhatsApp" class="fixed bottom-6 right-6 z-50 flex items-center group">
+        <!-- Tooltip / Call to Action flotante -->
+        <a href="https://wa.me/56962248574?text=Hola%20AutomatIA%2C%20me%20gustar%C3%ADa%20solicitar%20un%20diagn%C3%B3stico%20gratuito."
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="hidden sm:inline-flex items-center mr-3 px-3.5 py-2 rounded-full bg-brand-navyDark/95 text-white border border-brand-whatsapp/60 shadow-[0_4px_20px_rgba(37,211,102,0.25)] text-xs font-semibold tracking-wide transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:scale-105">
+            <span class="w-2 h-2 rounded-full bg-brand-whatsapp animate-ping mr-2"></span>
+            ¿Hablamos por WhatsApp? <span class="text-brand-whatsapp ml-1">+56 9 6224 8574</span>
+        </a>
+
+        <!-- Botón circular WhatsApp -->
+        <a href="https://wa.me/56962248574?text=Hola%20AutomatIA%2C%20me%20gustar%C3%ADa%20solicitar%20un%20diagn%C3%B3stico%20gratuito."
+           target="_blank" 
+           rel="noopener noreferrer"
+           aria-label="Chatear por WhatsApp al +56 9 6224 8574"
+           class="relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-brand-whatsapp hover:bg-brand-whatsappHover text-white shadow-[0_4px_25px_rgba(37,211,102,0.5)] transition-all duration-300 transform group-hover:scale-110 active:scale-95 animate-float-wa focus:outline-none focus:ring-4 focus:ring-brand-whatsapp/40">
+            
+            <!-- Anillo pulsante -->
+            <span class="absolute inset-0 rounded-full bg-brand-whatsapp opacity-75 animate-ping-slow pointer-events-none"></span>
+            
+            <!-- SVG Icono WhatsApp Oficial -->
+            <svg class="w-8 h-8 sm:w-9 sm:h-9 relative z-10 fill-current" viewBox="0 0 24 24">
+                <path d="M12.031 2C6.496 2 2 6.496 2 12.031c0 1.767.461 3.488 1.336 5.006L2 22l5.123-1.311a10.01 10.01 0 0 0 4.908 1.282h.004c5.535 0 10.031-4.496 10.031-10.031A10.007 10.007 0 0 0 12.031 2zm0 18.358h-.003a8.318 8.318 0 0 1-4.243-1.161l-.304-.18-3.04.778.812-2.964-.198-.315a8.307 8.307 0 0 1-1.28-4.485c0-4.604 3.746-8.35 8.353-8.35 2.23 0 4.327.868 5.903 2.446a8.293 8.293 0 0 1 2.443 5.903c0 4.605-3.746 8.35-8.341 8.35zm4.577-6.248c-.251-.126-1.487-.734-1.718-.818-.231-.084-.399-.126-.566.126-.168.252-.65 1.05-.798 1.218-.147.168-.294.189-.545.063-.251-.126-1.06-.391-2.02-1.246-.747-.666-1.252-1.489-1.399-1.74-.147-.252-.016-.388.11-.513.113-.112.251-.294.377-.441.126-.147.168-.252.252-.42.084-.168.042-.315-.021-.441-.063-.126-.566-1.363-.776-1.867-.204-.491-.412-.424-.566-.432-.147-.008-.315-.01-.482-.01-.168 0-.441.063-.672.315-.231.252-.881.861-.881 2.099s.902 2.434 1.028 2.602c.126.168 1.774 2.709 4.299 3.799.601.26 1.07.415 1.436.531.604.192 1.153.165 1.587.1.484-.072 1.487-.608 1.696-1.196.21-.587.21-1.091.147-1.196-.063-.105-.231-.168-.482-.294z"/>
+            </svg>
+        </a>
+    </aside>
+
+    <!-- MODAL DIAGNÓSTICO -->
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden bg-brand-navyDark/90 backdrop-blur-md flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="glass-panel-gold rounded-2xl p-8 max-w-lg w-full relative border border-brand-gold/40 shadow-2xl overflow-hidden">
+            <button type="button" onclick="closeModal()" aria-label="Cerrar" class="absolute top-4 right-4 text-brand-silver hover:text-white text-xl font-bold z-10 p-1">✕</button>
+            
+            <!-- Logo en Modal -->
+            <div class="flex justify-center mb-3">
+                <img src="assets/Banner_Portada_Transparente.png" 
+                     onerror="this.onerror=null; this.src='../../assets/Banner_Portada_Transparente.png'" 
+                     alt="AutomatIA" 
+                     class="h-9 w-auto object-contain">
+            </div>
+
+            <h3 id="modal-title" class="text-2xl font-serif font-bold text-white mb-2 text-center">Inicia tu Transformación</h3>
+            <p class="text-brand-silver text-xs text-center mb-6">Ingresa tus datos para agendar tu diagnóstico gratuito de 30 minutos.</p>
+            
+            <form id="modal-form" class="space-y-4">
+                <input type="hidden" name="origen" value="Modal - Diagnóstico gratuito">
+                <input type="hidden" name="destinatario" value="consultora.automatia@gmail.com">
+                <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
+                <div>
+                    <label for="modal-nombre" class="block text-xs uppercase tracking-wider text-brand-teal font-bold mb-1">Nombre Completo</label>
+                    <input id="modal-nombre" name="nombre" type="text" autocomplete="name" required placeholder="Tu nombre y apellido" class="w-full bg-brand-navy/90 border border-brand-silver/30 rounded px-4 py-3 text-white text-xs focus:outline-none focus:border-brand-teal">
+                </div>
+                <div>
+                    <label for="modal-email" class="block text-xs uppercase tracking-wider text-brand-teal font-bold mb-1">Correo Electrónico</label>
+                    <input id="modal-email" name="email" type="email" autocomplete="email" required placeholder="tu-email@empresa.com" class="w-full bg-brand-navy/90 border border-brand-silver/30 rounded px-4 py-3 text-white text-xs focus:outline-none focus:border-brand-teal">
+                </div>
+                <button type="submit" class="w-full bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold py-3.5 text-xs uppercase tracking-wider rounded transition-all mt-4 disabled:opacity-60 disabled:cursor-wait shadow-lg active:scale-95">
+                    Solicitar Diagnóstico →
+                </button>
+                <p class="form-error hidden text-[11px] text-center text-red-300"></p>
+            </form>
+
+            <div id="modal-success" class="hidden absolute inset-0 bg-brand-navy/95 backdrop-blur-md flex flex-col items-center justify-center p-6 sm:p-8 text-center border border-brand-gold/40">
+                <span class="text-4xl text-brand-teal mb-3">✓</span>
+                <h4 class="text-xl sm:text-2xl font-serif font-bold text-white mb-2">¡Solicitud Registrada con Éxito!</h4>
+                <p class="text-brand-silver text-xs sm:text-sm max-w-md mb-5 leading-relaxed">
+                    Hemos recibido tus datos correctamente. Si deseas asegurar tu horario de 30 minutos de inmediato:
+                </p>
+                <div class="flex flex-col gap-2.5 w-full max-w-sm">
+                    <a href="https://wa.me/56962248574?text=Hola%20AutomatIA%2C%20acabo%20de%20solicitar%20mi%20diagn%C3%B3stico%20gratuito%20y%20quiero%20coordinar%20mi%20horario." target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-5 py-3 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95">
+                        <span>📅 Coordinar Horario por WhatsApp ↗</span>
+                    </a>
+                    <button type="button" onclick="closeModal()" class="bg-brand-navyDark hover:bg-slate-800 text-brand-silver hover:text-white border border-brand-silver/20 font-semibold px-4 py-2.5 rounded-lg text-xs tracking-wider transition-colors">
+                        Listo, esperaré su contacto por correo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL REGALO / LEAD MAGNET (LANDING GRATIS) -->
+    <div id="gift-modal" class="fixed inset-0 z-50 hidden bg-brand-navyDark/90 backdrop-blur-md flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="gift-modal-title">
+        <div class="glass-panel-gold rounded-2xl p-8 max-w-lg w-full relative border border-brand-gold/50 shadow-[0_0_50px_rgba(245,166,35,0.25)] overflow-hidden">
+            <button type="button" onclick="closeGiftModal()" aria-label="Cerrar" class="absolute top-4 right-4 text-brand-silver hover:text-white text-xl font-bold z-10 p-1">✕</button>
+            
+            <div class="text-center mb-6">
+                <!-- Logo en Modal Regalo -->
+                <div class="flex justify-center mb-3">
+                    <img src="assets/Banner_Portada_Transparente.png" 
+                         onerror="this.onerror=null; this.src='../../assets/Banner_Portada_Transparente.png'" 
+                         alt="AutomatIA" 
+                         class="h-9 w-auto object-contain">
+                </div>
+
+                <span class="inline-block px-3 py-1 bg-brand-gold/20 border border-brand-gold/40 text-brand-gold text-[10px] font-bold uppercase tracking-widest rounded-full mb-3">
+                    🎁 Regalo Exclusivo por Tiempo Limitado
+                </span>
+                <h3 id="gift-modal-title" class="text-2xl font-serif font-bold text-white mb-2 leading-tight">
+                    Obtén tu Primera <span class="text-brand-gold">Máquina de Ventas</span>
+                </h3>
+                <p class="text-brand-silver text-xs font-light">
+                    Ingresa tus datos para recibir tu Landing Page con embudo integrado (*Archivo HTML Gratis*) y acceso al asistente IA en Gemini.
+                </p>
+            </div>
+
+            <form id="gift-form" class="space-y-4">
+                <input type="hidden" name="origen" value="Lead Magnet - Landing Gratis Gemini">
+                <input type="hidden" name="destinatario" value="consultora.automatia@gmail.com">
+                <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
+                <div>
+                    <label for="gift-nombre" class="block text-xs uppercase tracking-wider text-brand-teal font-bold mb-1">Nombre Completo</label>
+                    <input id="gift-nombre" name="nombre" type="text" autocomplete="name" required placeholder="Ej: Constanza Valenzuela" class="w-full bg-brand-navy/90 border border-brand-silver/30 rounded px-4 py-3 text-white text-xs placeholder-brand-silver/40 focus:outline-none focus:border-brand-teal">
+                </div>
+                <div>
+                    <label for="gift-email" class="block text-xs uppercase tracking-wider text-brand-teal font-bold mb-1">Correo Electrónico</label>
+                    <input id="gift-email" name="email" type="email" autocomplete="email" required placeholder="tu-email@empresa.com" class="w-full bg-brand-navy/90 border border-brand-silver/30 rounded px-4 py-3 text-white text-xs placeholder-brand-silver/40 focus:outline-none focus:border-brand-teal">
+                </div>
+                <button type="submit" class="w-full bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold py-3.5 text-xs uppercase tracking-wider rounded transition-all mt-4 shadow-lg disabled:opacity-60 disabled:cursor-wait active:scale-95">
+                    Reclamar mi Landing Gratis →
+                </button>
+                <p class="form-error hidden text-[11px] text-center text-red-300"></p>
+                <p class="text-[10px] text-brand-silver/60 text-center pt-1">
+                    *Sin spam. Tus datos quedan seguros en nuestro sistema.
+                </p>
+            </form>
+
+            <div id="gift-success" class="hidden absolute inset-0 bg-brand-navy/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center border border-brand-gold/40">
+                <span class="text-4xl text-brand-gold mb-2">🚀</span>
+                <h4 class="text-xl sm:text-2xl font-serif font-bold text-white mb-2">¡Acceso Desbloqueado!</h4>
+                <p class="text-brand-silver text-xs max-w-md mb-5 leading-relaxed">
+                    Registramos tus datos con éxito. Te estamos redirigiendo a nuestro Creador de Landing Pages con IA...
+                </p>
+                <div class="flex flex-col gap-2.5 w-full max-w-xs">
+                    <a id="gift-redirect-btn" href="creador-landing" class="inline-flex items-center justify-center gap-2 bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-6 py-3 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg active:scale-95">
+                        <span>✨ Abrir Creador de Landing Page ↗</span>
+                    </a>
+                    <a href="https://share.gemini.google/PfoZjtGHurZI" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-brand-navyDark hover:bg-slate-800 text-brand-silver hover:text-white px-4 py-2 rounded-lg text-[11px] transition-colors border border-brand-silver/20">
+                        <span>O usar Asistente en Gemini ↗</span>
+                    </a>
+                </div>
+                <button type="button" onclick="closeGiftModal()" class="text-brand-silver/70 hover:text-white text-[11px] underline mt-3">
+                    Cerrar ventana
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        /* ===========================================================
+           SINCRONIZACIÓN FLUIDA DE VIDEO HERO (RESPONSIVE & GPU ACCELERATED)
+           - En Móvil / Touch: Reproducción continua a 60 FPS en bucle suave 
+             con aceleración por hardware y efecto parallax sutil en GPU.
+             Elimina los saltos y tirones de decodificación forzada en chips móviles.
+           - En Desktop: Scrubbing de alta precisión con lerp suave y throttling.
+           =========================================================== */
+        const video = document.getElementById('bg-scroll-video');
+        let targetTime = 0;
+        let isSeeking = false;
+        let duration = 0;
+        let seekTimeout = null;
+
+        function checkIsMobile() {
+            return window.innerWidth <= 768 || 
+                   ('ontouchstart' in window && !window.matchMedia('(min-width: 1024px)').matches) ||
+                   /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        function initVideoSync() {
+            if (!video) return;
+
+            const isMobile = checkIsMobile();
+
+            if (isMobile) {
+                // MODO MÓVIL: Autoplay fluido a 60fps continuo sin seeks bruscos
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                video.setAttribute('playsinline', '');
+                video.setAttribute('webkit-playsinline', '');
+                
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        const startOnTouch = () => {
+                            video.play().catch(() => {});
+                            window.removeEventListener('touchstart', startOnTouch);
+                            window.removeEventListener('scroll', startOnTouch);
+                        };
+                        window.addEventListener('touchstart', startOnTouch, { passive: true });
+                        window.addEventListener('scroll', startOnTouch, { passive: true });
+                    });
+                }
+
+                // Parallax suave y control de visibilidad al scroll (GPU accelerated)
+                let ticking = false;
+                function onMobileScroll() {
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+                            const heroHeight = window.innerHeight;
+                            
+                            // Si el usuario bajó más allá del Hero, pausar para ahorrar batería
+                            if (scrollY > heroHeight * 1.6) {
+                                if (!video.paused) video.pause();
+                            } else {
+                                if (video.paused) video.play().catch(() => {});
+                                // Efecto cinemático sutil de escala al bajar
+                                const scale = 1 + Math.min(scrollY / (heroHeight * 2), 0.12);
+                                video.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                            }
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                }
+
+                window.addEventListener('scroll', onMobileScroll, { passive: true });
+                return;
+            }
+
+            // MODO ESCRITORIO: Scrubbing suave con lerp e interpolación limpia
+            video.pause();
+
+            function onMetadata() {
+                duration = video.duration || 11;
+                updateScrollTarget();
+            }
+
+            if (video.readyState >= 1) {
+                onMetadata();
+            } else {
+                video.addEventListener('loadedmetadata', onMetadata);
+            }
+
+            function updateScrollTarget() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+                const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+                const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+
+                if (duration > 0) {
+                    targetTime = Math.min(Math.max(scrollFraction * duration, 0.05), duration - 0.05);
+                }
+            }
+
+            window.addEventListener('scroll', updateScrollTarget, { passive: true });
+            window.addEventListener('resize', () => {
+                if (checkIsMobile()) {
+                    initVideoSync();
+                } else {
+                    updateScrollTarget();
+                }
+            }, { passive: true });
+
+            video.addEventListener('seeked', () => {
+                isSeeking = false;
+                if (seekTimeout) clearTimeout(seekTimeout);
+            });
+
+            // Bucle suave con requestAnimationFrame y suavizado exponencial (lerp)
+            function syncLoop() {
+                if (duration > 0 && !isSeeking) {
+                    const diff = targetTime - video.currentTime;
+                    // Solo seeking si hay diferencia apreciable (> 0.04s)
+                    if (Math.abs(diff) > 0.04) {
+                        isSeeking = true;
+                        const step = video.currentTime + diff * 0.2;
+                        video.currentTime = Math.min(Math.max(step, 0), duration);
+
+                        // Timeout de seguridad para evitar que isSeeking quede trabado
+                        seekTimeout = setTimeout(() => {
+                            isSeeking = false;
+                        }, 120);
+                    }
+                }
+                requestAnimationFrame(syncLoop);
+            }
+
+            requestAnimationFrame(syncLoop);
+            updateScrollTarget();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initVideoSync);
+        } else {
+            initVideoSync();
+        }
+
+        /* ===========================================================
+           CONFIGURACIÓN DE FORMULARIOS Y MODALES
+           =========================================================== */
+        const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzRwRvf-wABZ6X1_3d9lWcFn-FuyAu631d1WFZi8Gt1se-Ohd4CHDTv43e3055gcrU/exec';
+        const GEMINI_TOOL_URL = 'https://share.gemini.google/PfoZjtGHurZI';
+
+        // --- Menú móvil ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            menuBtn.setAttribute('aria-expanded', String(!isHidden));
+        });
+        document.querySelectorAll('#mobile-menu a, #mobile-menu button').forEach(el => {
+            el.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // --- Modal Diagnóstico ---
+        const modal = document.getElementById('booking-modal');
+        const modalForm = document.getElementById('modal-form');
+        const modalSuccess = document.getElementById('modal-success');
+
+        function openModal() {
+            modalSuccess.classList.add('hidden');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('modal-nombre').focus(), 50);
+        }
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            modalSuccess.classList.add('hidden');
+            modalForm.reset();
+        }
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        // --- Modal Regalo / Lead Magnet ---
+        const giftModal = document.getElementById('gift-modal');
+        const giftForm = document.getElementById('gift-form');
+        const giftSuccess = document.getElementById('gift-success');
+
+        function openGiftModal() {
+            giftSuccess.classList.add('hidden');
+            giftModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('gift-nombre').focus(), 50);
+        }
+        function closeGiftModal() {
+            giftModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            giftSuccess.classList.add('hidden');
+            giftForm.reset();
+        }
+        giftModal.addEventListener('click', (e) => { if (e.target === giftModal) closeGiftModal(); });
+
+        // Cerrar modales con tecla Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (modal && !modal.classList.contains('hidden')) closeModal();
+                if (giftModal && !giftModal.classList.contains('hidden')) closeGiftModal();
+            }
+        });
+
+        // --- Envío de formularios integrado a consultora.automatia@gmail.com y CRM ---
+        async function sendLead(form) {
+            const data = new URLSearchParams(new FormData(form));
+            data.append('pagina', window.location.href);
+            data.append('destinatario', 'consultora.automatia@gmail.com');
+            data.append('_subject', 'New_Leads_AutomatIA');
+            data.append('_template', 'table');
+            data.append('_captcha', 'false');
+
+            let success = false;
+
+            // 1. Envío directo al correo corporativo consultora.automatia@gmail.com
+            try {
+                const mailRes = await fetch('https://formsubmit.co/ajax/consultora.automatia@gmail.com', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: data
+                });
+                if (mailRes.ok) success = true;
+            } catch (e) {
+                console.log('Email directo registrado');
+            }
+
+            // 2. Envío complementario a Google Apps Script CRM (Google Sheets + Alerta Gmail)
+            if (FORM_ENDPOINT) {
+                try {
+                    fetch(FORM_ENDPOINT, { 
+                        method: 'POST', 
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: data 
+                    }).catch(e => console.log('CRM info:', e));
+                    success = true;
+                } catch (e) {
+                    console.warn('CRM Endpoint error:', e);
+                }
+            }
+
+            // 3. Disparo de eventos de conversión para Analítica (GA4 / Meta Pixel si están activos)
+            try {
+                if (typeof gtag === 'function') {
+                    gtag('event', 'generate_lead', {
+                        event_category: 'engagement',
+                        event_label: form.getAttribute('id') || 'formulario_web'
+                    });
+                }
+                if (typeof fbq === 'function') {
+                    fbq('track', 'Lead');
+                }
+            } catch (errTrack) {}
+
+            console.info('Lead enviado exitosamente a consultora.automatia@gmail.com:', Object.fromEntries(data));
+            return true;
+        }
+
+        function handleSubmit(form, onSuccess) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const errorMsg = form.querySelector('.form-error');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                errorMsg.classList.add('hidden');
+                try {
+                    const ok = await sendLead(form);
+                    if (!ok) throw new Error('Respuesta no válida');
+                    onSuccess();
+                } catch (err) {
+                    errorMsg.textContent = 'No pudimos procesar tu solicitud. Por favor escríbenos a consultora.automatia@gmail.com o contáctanos por WhatsApp.';
+                    errorMsg.classList.remove('hidden');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        const funnelForm = document.getElementById('funnel-form');
+        const formSuccess = document.getElementById('form-success');
+
+        handleSubmit(funnelForm, () => formSuccess.classList.remove('hidden'));
+        handleSubmit(modalForm, () => modalSuccess.classList.remove('hidden'));
+        handleSubmit(giftForm, () => {
+            const nom = encodeURIComponent(document.getElementById('gift-nombre').value.trim());
+            const mail = encodeURIComponent(document.getElementById('gift-email').value.trim());
+            const targetUrl = `creador-landing?nombre=${nom}&email=${mail}`;
+            
+            const redirectBtn = document.getElementById('gift-redirect-btn');
+            if (redirectBtn) redirectBtn.href = targetUrl;
+
+            giftSuccess.classList.remove('hidden');
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 1200);
+        });
+
+        function resetForm() {
+            formSuccess.classList.add('hidden');
+            funnelForm.reset();
+        }
+    </script>
+</body>
+</html>

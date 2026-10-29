@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Landing Pages con IA — AutomatIA</title>
+    <meta name="description" content="Diseña y genera tu landing page de alta conversión en segundos con inteligencia artificial y principios AIDA. Herramienta gratuita de AutomatIA.">
+    <link rel="icon" type="image/png" href="assets/Isotipo.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#0A1628',
+                            navyDark: '#050B14',
+                            teal: '#00B8A9',
+                            tealLight: '#32e3d5',
+                            gold: '#F5A623',
+                            light: '#EEF6F5',
+                            silver: '#C8D0DC',
+                            whatsapp: '#25D366'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Playfair Display', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #050B14; }
+        ::-webkit-scrollbar-thumb { background: #00B8A9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F5A623; }
+
+        .glass-card {
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 184, 169, 0.2);
+        }
+
+        .glass-card-gold {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(245, 166, 35, 0.4);
+            box-shadow: 0 10px 40px rgba(245, 166, 35, 0.1);
+        }
+
+        /* Mockup de dispositivos */
+        .device-desktop { width: 100%; height: 100%; border-radius: 0; }
+        .device-tablet { width: 768px; height: 95%; max-height: 900px; border-radius: 20px; border: 10px solid #1e293b; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
+        .device-mobile { width: 385px; height: 95%; max-height: 780px; border-radius: 36px; border: 12px solid #0f172a; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        .animate-subtle { animation: pulse-subtle 3s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-brand-navyDark text-brand-light font-sans antialiased selection:bg-brand-teal selection:text-brand-navy min-h-screen flex flex-col">
+
+    <!-- HEADER DE LA APLICACIÓN -->
+    <header class="bg-brand-navy/95 border-b border-brand-teal/20 sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-18 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/" class="flex items-center gap-3 group">
+                    <img src="assets/Banner_Portada_Transparente.png" alt="AutomatIA" class="h-9 sm:h-10 object-contain" onerror="this.src='assets/Isotipo.png'">
+                </a>
+                <div class="hidden md:flex items-center gap-2 pl-4 border-l border-brand-silver/20">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-brand-gold/15 text-brand-gold border border-brand-gold/40">
+                        ⚡ Creador de Landing con IA
+                    </span>
+                    <span class="text-xs text-brand-silver/60">Estructura AIDA & Neuromarketing</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="/#regalo" class="hidden sm:inline-flex items-center gap-1.5 text-xs text-brand-silver hover:text-white transition-colors">
+                    ← Volver a AutomatIA
+                </a>
+                <a href="https://wa.me/56962248574?text=Hola%20AutomatIA,%20estoy%20usando%20el%20creador%20de%20landing%20page%20y%20quiero%20conocer%20sus%20servicios%20de%20escalabilidad." target="_blank" rel="noopener noreferrer" class="bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-4 py-2 rounded text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(245,166,35,0.3)] flex items-center gap-1.5">
+                    <span>Agendar Asesoría</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="flex-1 flex flex-col relative">
+
+        <!-- VISTA 1: FORMULARIO WIZARD / GENERADOR (Activa al inicio) -->
+        <section id="builder-view" class="py-10 px-4 sm:px-6 max-w-5xl mx-auto w-full flex-1 flex flex-col justify-center">
+            
+            <!-- Encabezado del Generador -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-navy border border-brand-teal/40 mb-3 shadow-md">
+                    <span class="w-2 h-2 rounded-full bg-brand-teal animate-ping"></span>
+                    <span class="text-[11px] uppercase tracking-widest text-brand-teal font-bold">Generador Inteligente AutomatIA</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-3 tracking-tight">
+                    Crea tu Landing Page de Ventas en <span class="text-brand-gold">Segundos</span>
+                </h1>
+                <p class="text-brand-silver text-sm sm:text-base max-w-2xl mx-auto font-light leading-relaxed">
+                    Completa estos datos clave de tu negocio. Nuestra IA redactará el copy con metodología AIDA, estructurará la oferta y te entregará una página web funcional lista para captar leads.
+                </p>
+            </div>
+
+            <!-- Card del Formulario -->
+            <div class="glass-card-gold rounded-2xl p-6 sm:p-10 shadow-2xl relative">
+                <form id="generator-form" class="space-y-8">
+
+                    <!-- SECCIÓN 0: DATOS DE CONTACTO (Lead Capture para CRM) -->
+                    <div class="bg-brand-navy/60 p-5 rounded-xl border border-brand-teal/30">
+                        <div class="flex items-center gap-2.5 mb-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-teal text-brand-navy font-bold text-xs flex items-center justify-center">1</span>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-white">¿Dónde te enviamos el respaldo y acceso?</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="lead_name" class="block text-xs text-brand-silver font-medium mb-1">Tu Nombre Completo *</label>
+                                <input type="text" id="lead_name" name="lead_name" required placeholder="Ej: Roberto Muñoz" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-teal focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="lead_email" class="block text-xs text-brand-silver font-medium mb-1">Tu Correo Corporativo / Principal *</label>
+                                <input type="email" id="lead_email" name="lead_email" required placeholder="tu@empresa.com" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-teal focus:outline-none transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 1: DATOS DEL NEGOCIO -->
+                    <div>
+                        <div class="flex items-center gap-2.5 mb-4">
+                            <span class="w-6 h-6 rounded-full bg-brand-gold text-brand-navy font-bold text-xs flex items-center justify-center">2</span>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-white">Tu Negocio y Oferta</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                            <div class="sm:col-span-2">
+                                <label for="business_name" class="block text-xs text-brand-silver font-medium mb-1">Nombre Comercial de tu Negocio o Marca *</label>
+                                <input type="text" id="business_name" required placeholder="Ej: Nexo Legal, Clínica Vitalis, NovaFit..." class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="industry" class="block text-xs text-brand-silver font-medium mb-1">Rubro / Sector *</label>
+                                <select id="industry" required class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                                    <option value="servicios">Servicios B2B & Consultoría</option>
+                                    <option value="salud">Salud, Belleza & Bienestar</option>
+                                    <option value="tecnologia">Tecnología, Software & SaaS</option>
+                                    <option value="educacion">Cursos, Coaching & Educación</option>
+                                    <option value="inmobiliaria">Inmobiliaria & Arquitectura</option>
+                                    <option value="comercio">Comercio, Retail & Tiendas</option>
+                                    <option value="gastronomia">Gastronomía & Eventos</option>
+                                    <option value="otro">Otro Servicio Especializado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="main_offer" class="block text-xs text-brand-silver font-medium mb-1">¿Qué producto o servicio estrella quieres promocionar? *</label>
+                            <input type="text" id="main_offer" required placeholder="Ej: Asesoría tributaria mensual para pymes / Diseño de sonrisas con carillas / Plan de entrenamiento personalizado" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 2: PSICOLOGÍA DEL CLIENTE (AIDA) -->
+                    <div>
+                        <div class="flex items-center gap-2.5 mb-4">
+                            <span class="w-6 h-6 rounded-full bg-brand-gold text-brand-navy font-bold text-xs flex items-center justify-center">3</span>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-white">Psicología de Conversión (El Gancho)</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="target_avatar" class="block text-xs text-brand-silver font-medium mb-1">¿Quién es tu cliente ideal? (Avatar) *</label>
+                                <input type="text" id="target_avatar" required placeholder="Ej: Dueños de pymes en crecimiento, profesionales con poco tiempo..." class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="pain_point" class="block text-xs text-brand-silver font-medium mb-1">¿Qué dolor o problema le quita el sueño? *</label>
+                                <input type="text" id="pain_point" required placeholder="Ej: Multas sorpresa del SII, dolor constante de espalda, ventas estancadas..." class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label for="value_prop" class="block text-xs text-brand-silver font-medium mb-1">¿Cuál es tu gran beneficio diferencial o promesa? *</label>
+                            <input type="text" id="value_prop" required placeholder="Ej: Ahorra hasta 30% en impuestos legalmente / Recupera tu energía en 21 días sin dietas extremas" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 3: CONVERSIÓN & ESTILO -->
+                    <div>
+                        <div class="flex items-center gap-2.5 mb-4">
+                            <span class="w-6 h-6 rounded-full bg-brand-gold text-brand-navy font-bold text-xs flex items-center justify-center">4</span>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-white">Canal de Ventas y Estilo Visual</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="cta_label" class="block text-xs text-brand-silver font-medium mb-1">Texto del Botón Principal</label>
+                                <input type="text" id="cta_label" value="Agendar Asesoría Gratis" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                            </div>
+                            <div>
+                                <label for="whatsapp_number" class="block text-xs text-brand-silver font-medium mb-1">WhatsApp de Cierre (con cód. país) *</label>
+                                <input type="text" id="whatsapp_number" required placeholder="Ej: 56912345678" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3.5 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                                <span class="text-[10px] text-brand-silver/60">Sin signo +, solo números (ej: 569... o 549...)</span>
+                            </div>
+                            <div>
+                                <label for="palette_theme" class="block text-xs text-brand-silver font-medium mb-1">Paleta de Colores</label>
+                                <select id="palette_theme" class="w-full bg-brand-navyDark border border-brand-silver/30 rounded-lg px-3 py-2.5 text-white text-sm focus:border-brand-gold focus:outline-none transition-colors">
+                                    <option value="automatia_dark">AutomatIA Dark (Navy, Teal & Dorado)</option>
+                                    <option value="midnight_blue">Midnight Blue (Azul Rey & Blanco)</option>
+                                    <option value="emerald_luxury">Emerald Luxe (Esmeralda & Menta)</option>
+                                    <option value="amber_elegance">Amber Elegance (Borgoña & Oro Cálido)</option>
+                                    <option value="clean_light">Minimal Light (Fondo Claro & Azul Pizarra)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Generación -->
+                    <div class="pt-4 border-t border-brand-silver/15 text-center">
+                        <button type="submit" id="generate-submit-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-10 py-4 rounded-xl text-sm sm:text-base uppercase tracking-wider transition-all shadow-[0_0_35px_rgba(245,166,35,0.4)] hover:shadow-[0_0_50px_rgba(245,166,35,0.7)] active:scale-95">
+                            <span>✨ Construir mi Landing Page con IA</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </button>
+                        <p class="text-[11px] text-brand-silver/60 mt-3">
+                            *Entrega código HTML limpio y responsive listo para descargar, subir a Vercel o alojar en tu servidor.
+                        </p>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Loader / Modal de Generación -->
+            <div id="generation-loader" class="hidden fixed inset-0 z-50 bg-brand-navyDark/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
+                <div class="relative w-24 h-24 mb-6">
+                    <div class="absolute inset-0 rounded-full border-4 border-brand-teal/20"></div>
+                    <div class="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin"></div>
+                    <div class="absolute inset-3 rounded-full border-4 border-brand-teal border-b-transparent animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                    <div class="absolute inset-0 flex items-center justify-center font-bold text-xs text-white">IA</div>
+                </div>
+                <h3 id="loader-title" class="text-2xl font-serif font-bold text-white mb-2">Diseñando tu máquina de ventas...</h3>
+                <p id="loader-subtitle" class="text-sm text-brand-silver max-w-md font-light">Estructurando secciones bajo principios AIDA y neuromarketing...</p>
+                <div class="w-64 bg-brand-navy border border-brand-silver/20 rounded-full h-2 mt-6 overflow-hidden">
+                    <div id="loader-progress" class="bg-gradient-to-r from-brand-teal to-brand-gold h-full w-12 transition-all duration-300"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- VISTA 2: ESTUDIO DE VISTA PREVIA Y EXPORTACIÓN (Se activa tras generar) -->
+        <section id="preview-studio-view" class="hidden flex-1 flex flex-col h-[calc(100vh-4.5rem)] overflow-hidden">
+            
+            <!-- Barra de Herramientas Superior -->
+            <div class="bg-brand-navy border-b border-brand-teal/30 px-4 py-3 flex flex-wrap items-center justify-between gap-3 shadow-lg z-20">
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="editParameters()" class="inline-flex items-center gap-1.5 bg-brand-navyDark hover:bg-slate-800 text-brand-silver hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-brand-silver/20 transition-colors">
+                        <span>← Modificar Datos</span>
+                    </button>
+                    <div class="h-4 w-px bg-brand-silver/20"></div>
+                    <span id="preview-business-title" class="text-sm font-bold text-white hidden sm:inline">Landing Page</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">
+                        ✓ Generada con Éxito
+                    </span>
+                </div>
+
+                <!-- Selector de dispositivo -->
+                <div class="flex items-center bg-brand-navyDark p-1 rounded-lg border border-brand-silver/20 gap-1">
+                    <button type="button" onclick="setDevice('desktop')" id="btn-device-desktop" class="px-2.5 py-1 rounded text-xs font-semibold bg-brand-teal text-brand-navy transition-all" title="Vista Escritorio">
+                        🖥️ Escritorio
+                    </button>
+                    <button type="button" onclick="setDevice('tablet')" id="btn-device-tablet" class="px-2.5 py-1 rounded text-xs font-semibold text-brand-silver hover:text-white transition-all" title="Vista Tablet">
+                        📱 Tablet
+                    </button>
+                    <button type="button" onclick="setDevice('mobile')" id="btn-device-mobile" class="px-2.5 py-1 rounded text-xs font-semibold text-brand-silver hover:text-white transition-all" title="Vista Móvil">
+                        📲 Celular
+                    </button>
+                </div>
+
+                <!-- Acciones de Descarga / Copia -->
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="copyHTMLCode()" id="btn-copy-code" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold border border-slate-600 transition-all shadow-sm">
+                        <svg class="w-3.5 h-3.5 text-brand-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        <span>Copiar Código</span>
+                    </button>
+                    <button type="button" onclick="downloadHTMLFile()" class="inline-flex items-center gap-1.5 bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-4 py-2 rounded-lg text-xs uppercase tracking-wider transition-all shadow-md">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <span>Descargar HTML</span>
+                    </button>
+                    <button type="button" onclick="openInNewTab()" class="hidden md:inline-flex items-center gap-1.5 bg-brand-teal hover:bg-teal-400 text-brand-navy font-bold px-3 py-2 rounded-lg text-xs uppercase tracking-wider transition-all" title="Abrir en pestaña completa">
+                        <span>↗</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Área del Iframe con vista de dispositivo -->
+            <div class="flex-1 bg-slate-950 p-2 sm:p-4 flex items-center justify-center overflow-hidden relative">
+                <div id="device-wrapper" class="device-desktop transition-all duration-300 flex flex-col overflow-hidden bg-black shadow-2xl">
+                    <iframe id="preview-iframe" class="w-full h-full border-0 bg-white" title="Vista Previa de Landing Page"></iframe>
+                </div>
+            </div>
+
+            <!-- Banner Inferior de Conversión hacia AutomatIA -->
+            <div class="bg-brand-navyDark border-t border-brand-gold/40 px-4 sm:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs z-20">
+                <div class="flex items-center gap-3 text-center md:text-left">
+                    <span class="text-xl">🚀</span>
+                    <div>
+                        <p class="text-white font-bold">¿Quieres que esta landing cierre ventas automáticamente por WhatsApp y se conecte a un CRM?</p>
+                        <p class="text-brand-silver/70 font-light">En AutomatIA construimos tu sistema operativo con Agentes de Inteligencia Artificial.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="https://wa.me/56962248574?text=Hola%20AutomatIA,%20acabo%20de%20generar%20mi%20landing%20page%20y%20quiero%20agendar%20el%20Diagn%C3%B3stico%20Gratuito%20para%20automatizar%20mis%20ventas." target="_blank" rel="noopener noreferrer" class="bg-brand-teal hover:bg-teal-400 text-brand-navy font-bold px-5 py-2 rounded text-xs uppercase tracking-wider transition-all shadow-md whitespace-nowrap">
+                        Agendar Diagnóstico Gratuito →
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- MOTOR JAVASCRIPT DEL CREADOR (AIDA Generator & CRM Connector) -->
+    <script>
+        /* Endpoint configurado de Google Sheets CRM de AutomatIA */
+        const CRM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzRwRvf-wABZ6X1_3d9lWcFn-FuyAu631d1WFZi8Gt1se-Ohd4CHDTv43e3055gcrU/exec'; 
+        // Si el usuario no ha desplegado aún el script, usará respaldo transparente.
+
+        let currentGeneratedHTML = '';
+        let currentBusinessData = {};
+        let currentBlobUrl = null;
+
+        // Auto-llenar parámetros desde la URL (soporta lead_name/nombre y lead_email/email)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nameParam = urlParams.get('lead_name') || urlParams.get('nombre') || '';
+            const emailParam = urlParams.get('lead_email') || urlParams.get('email') || '';
+            const businessParam = urlParams.get('business_name') || urlParams.get('negocio') || '';
+            
+            if (nameParam) document.getElementById('lead_name').value = nameParam;
+            if (emailParam) document.getElementById('lead_email').value = emailParam;
+            if (businessParam) document.getElementById('business_name').value = businessParam;
+        });
+
+        // Manejador del Formulario Principal
+        const generatorForm = document.getElementById('generator-form');
+        const builderView = document.getElementById('builder-view');
+        const previewStudioView = document.getElementById('preview-studio-view');
+        const generationLoader = document.getElementById('generation-loader');
+        const loaderTitle = document.getElementById('loader-title');
+        const loaderSubtitle = document.getElementById('loader-subtitle');
+        const loaderProgress = document.getElementById('loader-progress');
+
+        generatorForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 1. Recolectar datos
+            currentBusinessData = {
+                leadName: document.getElementById('lead_name').value.trim(),
+                leadEmail: document.getElementById('lead_email').value.trim(),
+                businessName: document.getElementById('business_name').value.trim(),
+                industry: document.getElementById('industry').value,
+                mainOffer: document.getElementById('main_offer').value.trim(),
+                targetAvatar: document.getElementById('target_avatar').value.trim(),
+                painPoint: document.getElementById('pain_point').value.trim(),
+                valueProp: document.getElementById('value_prop').value.trim(),
+                ctaLabel: document.getElementById('cta_label').value.trim() || 'Comenzar Ahora',
+                whatsappNumber: document.getElementById('whatsapp_number').value.replace(/[^0-9]/g, ''),
+                paletteTheme: document.getElementById('palette_theme').value
+            };
+
+            // 2. Enviar lead al CRM silenciosamente (background)
+            sendLeadToCRM(currentBusinessData);
+
+            // 3. Activar animación de progreso
+            generationLoader.classList.remove('hidden');
+            animateLoader();
+
+            // 4. Generar el código HTML con la IA/Engine
+            setTimeout(() => {
+                currentGeneratedHTML = generateLandingHTML(currentBusinessData);
+                renderPreview(currentGeneratedHTML);
+
+                generationLoader.classList.add('hidden');
+                builderView.classList.add('hidden');
+                previewStudioView.classList.remove('hidden');
+                document.getElementById('preview-business-title').textContent = currentBusinessData.businessName;
+            }, 2400);
+        });
+
+        // Envío asíncrono al correo consultora.automatia@gmail.com y CRM de Google Sheets
+        function sendLeadToCRM(data) {
+            const payload = new URLSearchParams();
+            payload.append('nombre', data.leadName);
+            payload.append('email', data.leadEmail);
+            payload.append('whatsapp', data.whatsappNumber || 'No especificado');
+            payload.append('negocio', data.businessName);
+            payload.append('rubro', data.industry);
+            payload.append('oferta', data.mainOffer);
+            payload.append('avatar_cliente', data.targetAvatar);
+            payload.append('dolor_resuelto', data.painPoint);
+            payload.append('promesa_valor', data.valueProp);
+            payload.append('origen', `Generador Landing: ${data.businessName} (${data.industry})`);
+            payload.append('destinatario', 'consultora.automatia@gmail.com');
+            payload.append('_subject', 'New_Leads_AutomatIA — Generador de Landing');
+            payload.append('_template', 'table');
+            payload.append('_captcha', 'false');
+            payload.append('pagina', window.location.href);
+
+            // 1. Envío directo al correo de AutomatIA (entrega inmediata)
+            try {
+                fetch('https://formsubmit.co/ajax/consultora.automatia@gmail.com', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: payload
+                }).catch(err => console.log('Email dispatch logged:', err));
+            } catch (e) {}
+
+            // 2. Envío secundario al Web App de Google Sheets CRM
+            if (CRM_ENDPOINT) {
+                try {
+                    fetch(CRM_ENDPOINT, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: payload
+                    }).catch(err => console.log('CRM info:', err));
+                } catch (e) {
+                    console.warn('CRM send error:', e);
+                }
+            }
+
+            // 3. Disparo de eventos de conversión para Analítica
+            try {
+                if (typeof gtag === 'function') {
+                    gtag('event', 'create_landing_page', { event_category: 'tool_engagement', event_label: data.businessName });
+                }
+                if (typeof fbq === 'function') {
+                    fbq('track', 'CompleteRegistration', { content_name: 'Landing Page Generator' });
+                }
+            } catch (errTrack) {}
+        }
+
+        // Animación de pasos del cargador
+        function animateLoader() {
+            const steps = [
+                { title: 'Analizando psicología del avatar...', sub: `Mapeando el dolor principal: "${currentBusinessData.painPoint}"`, width: '25%' },
+                { title: 'Redactando Copywriting AIDA...', sub: 'Formulando titulares magnéticos y ganchos de alta conversión...', width: '55%' },
+                { title: 'Integrando WhatsApp de Cierre...', sub: `Configurando botón directo hacia +${currentBusinessData.whatsappNumber}...`, width: '85%' },
+                { title: '¡Landing lista!', sub: 'Renderizando interfaz responsive...', width: '100%' }
+            ];
+
+            steps.forEach((st, idx) => {
+                setTimeout(() => {
+                    loaderTitle.textContent = st.title;
+                    loaderSubtitle.textContent = st.sub;
+                    loaderProgress.style.width = st.width;
+                }, idx * 600);
+            });
+        }
+
+        // Renderizado en el iframe
+        function renderPreview(htmlContent) {
+            if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+            const blob = new Blob([htmlContent], { type: 'text/html; charset=utf-8' });
+            currentBlobUrl = URL.createObjectURL(blob);
+            document.getElementById('preview-iframe').src = currentBlobUrl;
+        }
+
+        // Modificar parámetros (volver al wizard)
+        function editParameters() {
+            previewStudioView.classList.add('hidden');
+            builderView.classList.remove('hidden');
+        }
+
+        // Selector de vista de dispositivo
+        function setDevice(device) {
+            const wrapper = document.getElementById('device-wrapper');
+            const btnDesktop = document.getElementById('btn-device-desktop');
+            const btnTablet = document.getElementById('btn-device-tablet');
+            const btnMobile = document.getElementById('btn-device-mobile');
+
+            [btnDesktop, btnTablet, btnMobile].forEach(btn => {
+                btn.className = "px-2.5 py-1 rounded text-xs font-semibold text-brand-silver hover:text-white transition-all";
+            });
+
+            wrapper.className = "transition-all duration-300 flex flex-col overflow-hidden bg-black shadow-2xl " + 
+                (device === 'desktop' ? 'device-desktop' : device === 'tablet' ? 'device-tablet' : 'device-mobile');
+
+            if (device === 'desktop') btnDesktop.className = "px-2.5 py-1 rounded text-xs font-semibold bg-brand-teal text-brand-navy transition-all";
+            if (device === 'tablet') btnTablet.className = "px-2.5 py-1 rounded text-xs font-semibold bg-brand-teal text-brand-navy transition-all";
+            if (device === 'mobile') btnMobile.className = "px-2.5 py-1 rounded text-xs font-semibold bg-brand-teal text-brand-navy transition-all";
+        }
+
+        // Copiar Código HTML
+        function copyHTMLCode() {
+            navigator.clipboard.writeText(currentGeneratedHTML).then(() => {
+                const btn = document.getElementById('btn-copy-code');
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<span>✓ ¡Código Copiado!</span>';
+                btn.classList.add('bg-green-700');
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.classList.remove('bg-green-700');
+                }, 2000);
+            }).catch(() => alert('No se pudo copiar automáticamente. Por favor descarga el archivo.'));
+        }
+
+        // Descargar archivo .html
+        function downloadHTMLFile() {
+            const filename = `landing-${currentBusinessData.businessName.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'automatia'}.html`;
+            const blob = new Blob([currentGeneratedHTML], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Abrir en pestaña nueva
+        function openInNewTab() {
+            if (currentBlobUrl) window.open(currentBlobUrl, '_blank');
+        }
+
+        /* =========================================================================
+           MOTOR INTELIGENTE DE COPYWRITING & GENERACIÓN DE LANDING PAGES (AIDA)
+           ========================================================================= */
+        function generateLandingHTML(data) {
+            const palettes = {
+                automatia_dark: {
+                    bg: '#0A1628',
+                    bgAlt: '#050B14',
+                    cardBg: '#0f213a',
+                    text: '#FFFFFF',
+                    textMuted: '#C8D0DC',
+                    accent: '#00B8A9',
+                    accentHover: '#009688',
+                    accentText: '#0A1628',
+                    gold: '#F5A623',
+                    border: 'rgba(0,184,169,0.25)',
+                    badgeBg: 'rgba(245,166,35,0.15)',
+                    badgeText: '#F5A623'
+                },
+                midnight_blue: {
+                    bg: '#091322',
+                    bgAlt: '#030812',
+                    cardBg: '#12223b',
+                    text: '#FFFFFF',
+                    textMuted: '#94a3b8',
+                    accent: '#38bdf8',
+                    accentHover: '#0284c7',
+                    accentText: '#091322',
+                    gold: '#38bdf8',
+                    border: 'rgba(56,189,248,0.25)',
+                    badgeBg: 'rgba(56,189,248,0.15)',
+                    badgeText: '#38bdf8'
+                },
+                emerald_luxury: {
+                    bg: '#051b14',
+                    bgAlt: '#020d0a',
+                    cardBg: '#0b2b20',
+                    text: '#FFFFFF',
+                    textMuted: '#a7f3d0',
+                    accent: '#10b981',
+                    accentHover: '#059669',
+                    accentText: '#020d0a',
+                    gold: '#34d399',
+                    border: 'rgba(16,185,129,0.3)',
+                    badgeBg: 'rgba(16,185,129,0.15)',
+                    badgeText: '#34d399'
+                },
+                amber_elegance: {
+                    bg: '#1c130d',
+                    bgAlt: '#120b07',
+                    cardBg: '#2a1e16',
+                    text: '#FFFFFF',
+                    textMuted: '#fed7aa',
+                    accent: '#f59e0b',
+                    accentHover: '#d97706',
+                    accentText: '#1c130d',
+                    gold: '#fbbf24',
+                    border: 'rgba(245,158,11,0.3)',
+                    badgeBg: 'rgba(245,158,11,0.15)',
+                    badgeText: '#fbbf24'
+                },
+                clean_light: {
+                    bg: '#f8fafc',
+                    bgAlt: '#ffffff',
+                    cardBg: '#ffffff',
+                    text: '#0f172a',
+                    textMuted: '#475569',
+                    accent: '#2563eb',
+                    accentHover: '#1d4ed8',
+                    accentText: '#ffffff',
+                    gold: '#d97706',
+                    border: 'rgba(203,213,225,0.8)',
+                    badgeBg: 'rgba(37,99,235,0.1)',
+                    badgeText: '#2563eb'
+                }
+            };
+
+            const pal = palettes[data.paletteTheme] || palettes.automatia_dark;
+            const waMsg = encodeURIComponent(`¡Hola ${data.businessName}! Vengo desde su página web y quiero solicitar más información sobre "${data.mainOffer}".`);
+            const waLink = `https://wa.me/${data.whatsappNumber}?text=${waMsg}`;
+
+            // Copys adaptativos según rubro
+            const industryBadges = {
+                servicios: 'Consultoría & Estrategia Profesional',
+                salud: 'Atención Médica & Bienestar de Precisión',
+                tecnologia: 'Solución Digital de Alto Impacto',
+                educacion: 'Capacitación & Mentoría Especializada',
+                inmobiliaria: 'Inversión & Bienes Raíces Premium',
+                comercio: 'Calidad Garantizada & Entrega Rápida',
+                gastronomia: 'Experiencia Exclusiva & Reservas',
+                otro: 'Servicio Garantizado de Primera Línea'
+            };
+
+            const badgeText = industryBadges[data.industry] || 'Servicio Exclusivo';
+
+            return `<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${data.businessName} — ${data.mainOffer}</title>
+    <meta name="description" content="${data.valueProp}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (escaped script tag to prevent closing parent script) -->
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; background-color: ${pal.bg}; color: ${pal.text}; }
+        .font-serif { font-family: 'Playfair Display', Georgia, serif; }
+        .accent-color { color: ${pal.accent}; }
+        .gold-color { color: ${pal.gold}; }
+        .accent-bg { background-color: ${pal.accent}; color: ${pal.accentText}; }
+        .accent-bg:hover { background-color: ${pal.accentHover}; }
+        .card-custom { background-color: ${pal.cardBg}; border: 1px solid ${pal.border}; }
+    </style>
+</head>
+<body class="selection:bg-amber-400 selection:text-black min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md border-b" style="background-color: ${pal.bg}E6; border-color: ${pal.border};">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+            <a href="#" class="font-serif font-bold text-2xl tracking-tight flex items-center gap-2">
+                <span>${data.businessName}</span>
+                <span class="w-2 h-2 rounded-full" style="background-color: ${pal.accent};"></span>
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="accent-bg font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.311.045-.698.077-2.027-.474-1.637-.679-2.698-2.34-2.779-2.451-.081-.112-.663-.882-.663-1.682 0-.801.417-1.196.565-1.358.148-.163.324-.204.433-.204.108 0 .216.002.311.007.1.006.233-.038.365.279.135.324.46 1.12.5 1.202.04.081.068.175.014.283-.054.108-.081.176-.162.27-.081.095-.171.211-.244.283-.081.081-.166.17-.072.332.095.162.42 6.94 1.22 1.348.423.376.779.493.89.547.112.054.175.045.243-.032.068-.077.297-.346.376-.465.079-.118.158-.098.266-.059.108.04.685.323.803.382.118.059.197.088.226.138.029.049.029.288-.115.693z"/></svg>
+                    <span>${data.ctaLabel}</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION (ATENCIÓN) -->
+    <header class="py-20 sm:py-28 px-4 sm:px-6 relative text-center flex-1 flex flex-col justify-center items-center">
+        <div class="max-w-4xl mx-auto z-10">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 uppercase tracking-widest" style="background-color: ${pal.badgeBg}; color: ${pal.badgeText}; border: 1px solid ${pal.border};">
+                <span>✦</span>
+                <span>${badgeText}</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-serif font-bold leading-tight mb-6">
+                ${data.valueProp}
+            </h1>
+
+            <p class="text-lg sm:text-2xl font-light max-w-2xl mx-auto mb-10 leading-relaxed" style="color: ${pal.textMuted};">
+                Diseñado especialmente para <strong class="text-white">${data.targetAvatar}</strong> que buscan resolver <span class="underline decoration-amber-400 decoration-2">${data.painPoint}</span> de manera definitiva.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-12">
+                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto accent-bg font-bold px-8 py-4 rounded-xl text-base uppercase tracking-wider transition-all shadow-xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                    <span>${data.ctaLabel}</span>
+                    <span>→</span>
+                </a>
+                <a href="#dolores" class="w-full sm:w-auto px-6 py-4 rounded-xl text-sm font-semibold transition-colors border" style="border-color: ${pal.border}; color: ${pal.textMuted};">
+                    Descubrir Más ↓
+                </a>
+            </div>
+
+            <!-- Micro Prueba Social -->
+            <div class="flex flex-wrap items-center justify-center gap-6 pt-8 border-t text-xs font-medium" style="border-color: ${pal.border}; color: ${pal.textMuted};">
+                <div class="flex items-center gap-2">
+                    <span class="gold-color font-bold text-sm">★★★★★</span>
+                    <span>Satisfacción Garantizada</span>
+                </div>
+                <span>•</span>
+                <div>Atención Inmediata por WhatsApp</div>
+                <span>•</span>
+                <div>Sin Compromiso Inicial</div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- SECCIÓN DE DOLORES (INTERÉS) -->
+    <section id="dolores" class="py-20 px-4 sm:px-6 border-t" style="background-color: ${pal.bgAlt}; border-color: ${pal.border};">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-widest mb-2 block" style="color: ${pal.accent};">¿Te Suena Familiar?</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold mb-4">
+                    Sabemos lo frustrante que es lidiar con esto a diario.
+                </h2>
+                <p class="text-base font-light" style="color: ${pal.textMuted};">
+                    La mayoría de los ${data.targetAvatar} se enfrentan al mismo obstáculo antes de descubrir una metodología probada.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <div class="card-custom p-8 rounded-2xl relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl mb-4" style="background-color: ${pal.badgeBg}; color: ${pal.badgeText};">
+                        ⚠️
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">${data.painPoint}</h3>
+                    <p class="text-sm font-light leading-relaxed" style="color: ${pal.textMuted};">
+                        Cada día que pasa sin atender este cuello de botella genera más fricción, pérdida de tiempo y desgaste emocional o financiero.
+                    </p>
+                </div>
+
+                <div class="card-custom p-8 rounded-2xl relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl mb-4" style="background-color: ${pal.badgeBg}; color: ${pal.badgeText};">
+                        ⏱️
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Tiempo Mal Invertido</h3>
+                    <p class="text-sm font-light leading-relaxed" style="color: ${pal.textMuted};">
+                        Intentar resolverlo con parches temporales o soluciones genéricas solo retrasa los resultados que tu proyecto realmente merece.
+                    </p>
+                </div>
+
+                <div class="card-custom p-8 rounded-2xl relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl mb-4" style="background-color: ${pal.badgeBg}; color: ${pal.badgeText};">
+                        📉
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Falta de Claridad</h3>
+                    <p class="text-sm font-light leading-relaxed" style="color: ${pal.textMuted};">
+                        Sin un paso a paso estructurado y un aliado experto, es muy fácil estancarse y dejar pasar oportunidades de crecimiento.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE SOLUCIÓN & BENEFICIOS (DESEO) -->
+    <section class="py-24 px-4 sm:px-6">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-widest mb-2 block" style="color: ${pal.gold};">La Solución Que Esperabas</span>
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold mb-4">
+                    Transforma tu realidad con ${data.mainOffer}
+                </h2>
+                <p class="text-base font-light" style="color: ${pal.textMuted};">
+                    Un enfoque a la medida de tus objetivos reales, enfocado en simplicidad, rapidez y retorno tangible.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="card-custom p-8 rounded-2xl">
+                    <div class="text-3xl mb-4">💎</div>
+                    <h4 class="text-lg font-bold mb-2">Estrategia Validada</h4>
+                    <p class="text-sm font-light" style="color: ${pal.textMuted};">
+                        No improvisamos. Aplicamos un proceso testeado para entregar resultados rápidos y medibles desde el día uno.
+                    </p>
+                </div>
+                <div class="card-custom p-8 rounded-2xl">
+                    <div class="text-3xl mb-4">🎯</div>
+                    <h4 class="text-lg font-bold mb-2">Acompañamiento Directo</h4>
+                    <p class="text-sm font-light" style="color: ${pal.textMuted};">
+                        Estás en contacto con profesionales que comprenden tus necesidades y responden sin tecnicismos innecesarios.
+                    </p>
+                </div>
+                <div class="card-custom p-8 rounded-2xl">
+                    <div class="text-3xl mb-4">⚡</div>
+                    <h4 class="text-lg font-bold mb-2">Cero Fricción</h4>
+                    <p class="text-sm font-light" style="color: ${pal.textMuted};">
+                        Implementación ágil pensada para que no pierdas horas en trámites ni configuraciones complejas.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Testimonio Destacado -->
+            <div class="card-custom p-8 sm:p-12 rounded-3xl text-center relative border-2" style="border-color: ${pal.accent};">
+                <div class="text-4xl mb-4 gold-color">★★★★★</div>
+                <blockquote class="text-lg sm:text-2xl font-serif italic mb-6 max-w-2xl mx-auto">
+                    "Contratar a ${data.businessName} fue la mejor decisión del año. Resolvieron nuestro dolor de inmediato y la comunicación fue impecable."
+                </blockquote>
+                <div class="font-bold text-sm">Cliente Verificado</div>
+                <div class="text-xs" style="color: ${pal.textMuted};">${data.targetAvatar}</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PREGUNTAS FRECUENTES -->
+    <section class="py-20 px-4 sm:px-6 border-t" style="background-color: ${pal.bgAlt}; border-color: ${pal.border};">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-serif font-bold text-center mb-12">Preguntas Frecuentes</h2>
+            
+            <div class="space-y-4">
+                <details class="card-custom p-6 rounded-xl cursor-pointer group">
+                    <summary class="font-bold text-base flex justify-between items-center list-none">
+                        <span>¿Cómo es el proceso para comenzar?</span>
+                        <span class="accent-color text-xl group-open:rotate-45 transition-transform">+</span>
+                    </summary>
+                    <p class="text-sm font-light mt-4 pt-3 border-t" style="border-color: ${pal.border}; color: ${pal.textMuted};">
+                        Solo debes pulsar en el botón de WhatsApp. Coordinaremos una breve llamada o chat de diagnóstico sin ningún compromiso para evaluar tu caso.
+                    </p>
+                </details>
+
+                <details class="card-custom p-6 rounded-xl cursor-pointer group">
+                    <summary class="font-bold text-base flex justify-between items-center list-none">
+                        <span>¿Cuánto tiempo toma ver resultados?</span>
+                        <span class="accent-color text-xl group-open:rotate-45 transition-transform">+</span>
+                    </summary>
+                    <p class="text-sm font-light mt-4 pt-3 border-t" style="border-color: ${pal.border}; color: ${pal.textMuted};">
+                        Dependiendo de la envergadura, nuestros clientes comienzan a experimentar mejoras y alivio operativo dentro de los primeros días de implementación.
+                    </p>
+                </details>
+
+                <details class="card-custom p-6 rounded-xl cursor-pointer group">
+                    <summary class="font-bold text-base flex justify-between items-center list-none">
+                        <span>¿Tienen garantía o soporte?</span>
+                        <span class="accent-color text-xl group-open:rotate-45 transition-transform">+</span>
+                    </summary>
+                    <p class="text-sm font-light mt-4 pt-3 border-t" style="border-color: ${pal.border}; color: ${pal.textMuted};">
+                        Por supuesto. Respaldamos cada uno de nuestros entregables con soporte dedicado para garantizar que todo funcione como se prometió.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL (ACCIÓN) -->
+    <footer class="py-24 px-4 sm:px-6 text-center relative border-t" style="border-color: ${pal.border};">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl sm:text-5xl font-serif font-bold mb-6">
+                ¿Listo para dar el siguiente paso con ${data.businessName}?
+            </h2>
+            <p class="text-base sm:text-lg font-light max-w-xl mx-auto mb-10" style="color: ${pal.textMuted};">
+                No permitas que ${data.painPoint} siga frenando tu avance. Escríbenos directamente y te ayudaremos a solucionarlo.
+            </p>
+            <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="accent-bg font-bold px-10 py-5 rounded-2xl text-lg uppercase tracking-wider transition-all shadow-2xl inline-flex items-center gap-3 hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.311.045-.698.077-2.027-.474-1.637-.679-2.698-2.34-2.779-2.451-.081-.112-.663-.882-.663-1.682 0-.801.417-1.196.565-1.358.148-.163.324-.204.433-.204.108 0 .216.002.311.007.1.006.233-.038.365.279.135.324.46 1.12.5 1.202.04.081.068.175.014.283-.054.108-.081.176-.162.27-.081.095-.171.211-.244.283-.081.081-.166.17-.072.332.095.162.42 6.94 1.22 1.348.423.376.779.493.89.547.112.054.175.045.243-.032.068-.077.297-.346.376-.465.079-.118.158-.098.266-.059.108.04.685.323.803.382.118.059.197.088.226.138.029.049.029.288-.115.693z"/></svg>
+                <span>${data.ctaLabel}</span>
+            </a>
+            <div class="mt-16 text-xs" style="color: ${pal.textMuted};">
+                &copy; ${new Date().getFullYear()} ${data.businessName}. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+    <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_4px_25px_rgba(37,211,102,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center" title="Contactar por WhatsApp">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.311.045-.698.077-2.027-.474-1.637-.679-2.698-2.34-2.779-2.451-.081-.112-.663-.882-.663-1.682 0-.801.417-1.196.565-1.358.148-.163.324-.204.433-.204.108 0 .216.002.311.007.1.006.233-.038.365.279.135.324.46 1.12.5 1.202.04.081.068.175.014.283-.054.108-.081.176-.162.27-.081.095-.171.211-.244.283-.081.081-.166.17-.072.332.095.162.42 6.94 1.22 1.348.423.376.779.493.89.547.112.054.175.045.243-.032.068-.077.297-.346.376-.465.079-.118.158-.098.266-.059.108.04.685.323.803.382.118.059.197.088.226.138.029.049.029.288-.115.693z"/></svg>
+    </a>
+
+</body>
+</html>`;
+        }
+    </script>
+</body>
+</html>

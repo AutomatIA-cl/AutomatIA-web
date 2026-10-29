@@ -1,0 +1,19 @@
+# Archivos de desarrollo y documentos internos no necesarios en producción
+.git
+.gitignore
+*.docx
+*.pptx
+*.pdf
+*.txt
+*.backup*
+server.js
+README_VERCEL.md
+
+# Carpetas de documentación interna
+Identidad de marca/
+Propuesta_valor/
+CRM_Google_Sheets/
+web_AutomatIA/Agencia de Escalabilidad Digital/
+web_AutomatIA/CRM_Google_Sheets/
+web_AutomatIA/historial_web/
+deploy_vercel/
