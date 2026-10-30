@@ -61,7 +61,7 @@
         ::-webkit-scrollbar-thumb { background: #00B8A9; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #F5A623; }
 
-        /* Contenedor del video de fondo con soporte dvh para móviles y aceleración GPU */
+        /* Contenedor del fondo con soporte dvh para móviles y aceleración GPU */
         #fixed-video-bg {
             position: fixed;
             inset: 0;
@@ -76,29 +76,13 @@
             -webkit-transform: translateZ(0);
         }
 
-        #bg-scroll-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: 100%;
-            height: 100%;
-            transform: translate3d(-50%, -50%, 0);
-            -webkit-transform: translate3d(-50%, -50%, 0);
-            object-fit: cover;
-            pointer-events: none;
-            will-change: transform;
-        }
-
-        /* Canvas de alto rendimiento que dibuja el frame exacto del video */
+        /* Canvas de alto rendimiento que dibuja la secuencia de frames */
         #bg-scroll-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
             pointer-events: none;
         }
 
@@ -180,17 +164,9 @@
 </head>
 <body class="bg-brand-navyDark text-brand-light font-sans antialiased selection:bg-brand-teal selection:text-brand-navy overflow-x-hidden relative">
 
-    <!-- FONDO FIJO CON VIDEO SINCRONIZADO AL SCROLL (ADELANTE / ATRÁS / PAUSA) -->
+    <!-- FONDO FIJO CON SECUENCIA DE FRAMES EN CANVAS (SIN FRICCIÓN, BIDIRECCIONAL Y REACTIVO) -->
     <div id="fixed-video-bg" aria-hidden="true">
-        <video id="bg-scroll-video" 
-               src="assets/Video_Hero_definitivo.mp4" 
-               poster="assets/Frame_intermedio_helipuerto.jpg"
-               playsinline 
-               webkit-playsinline
-               muted 
-               preload="auto" 
-               class="w-full h-full object-cover">
-        </video>
+        <canvas id="bg-scroll-canvas"></canvas>
     </div>
     <div id="bg-ambient-overlay" aria-hidden="true"></div>
 
@@ -972,99 +948,115 @@
     <!-- SCRIPTS -->
     <script>
         /* ===========================================================
-           SINCRONIZACIÓN DE VIDEO AL SCROLL BIDIRECCIONAL (PC, LAPTOP Y MÓVIL)
+           SECUENCIA DE FRAMES EN CANVAS SINCRONIZADA AL SCROLL
+           (CERO FRICCIÓN, NATIVO EN MÓVIL, PC Y LAPTOP)
            Cumple estrictamente las 3 condiciones:
            1. Avanza hacia adelante en sincronía con el scroll hacia abajo.
            2. Retrocede hacia atrás en sincronía con el scroll hacia arriba.
            3. Se detiene de inmediato cuando el scroll se detiene (cero inercia, cero reproducciones fantasma).
+           Utiliza 80 frames WebP pre-optimizados dibujados en un Canvas 2D acelerado por GPU.
            =========================================================== */
-        const video = document.getElementById('bg-scroll-video');
-        let duration = 11.05; // Duración exacta del video pre-cargada
-        let isSeeking = false;
-        let queuedTime = null;
-        let watchdogTimer = null;
+        const canvas = document.getElementById('bg-scroll-canvas');
+        const ctx = canvas ? canvas.getContext('2d', { alpha: false }) : null;
+        const TOTAL_FRAMES = 80;
+        const frameImages = new Array(TOTAL_FRAMES);
+        let currentFrameIndex = 0;
+        let isInitialFrameRendered = false;
 
-        function initVideoSync() {
-            if (!video) return;
+        function getFramePath(index) {
+            return `assets/hero-frames/frame_${String(index).padStart(3, '0')}.webp`;
+        }
 
-            video.pause();
-            video.muted = true;
-            video.playsInline = true;
-            video.setAttribute('playsinline', '');
-            video.setAttribute('webkit-playsinline', '');
+        function resizeCanvas() {
+            if (!canvas) return;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            renderCurrentFrame();
+        }
 
-            function onMetadata() {
-                duration = video.duration || 11.05;
-                triggerScrollSync();
-            }
+        function drawCoverImage(img) {
+            if (!ctx || !canvas || !img || !img.complete || img.naturalWidth === 0) return;
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const iw = img.naturalWidth;
+            const ih = img.naturalHeight;
+            const hRatio = cw / iw;
+            const vRatio = ch / ih;
+            const ratio = Math.max(hRatio, vRatio);
+            const sw = iw * ratio;
+            const sh = ih * ratio;
+            const sx = (cw - sw) / 2;
+            const sy = (ch - sh) / 2;
+            ctx.drawImage(img, 0, 0, iw, ih, sx, sy, sw, sh);
+        }
 
-            if (video.readyState >= 1) {
-                onMetadata();
+        function renderCurrentFrame() {
+            const img = frameImages[currentFrameIndex];
+            if (img && img.complete) {
+                drawCoverImage(img);
             } else {
-                video.addEventListener('loadedmetadata', onMetadata);
+                // Fallback inteligente: si el frame exacto aún se descarga, muestra el frame más cercano cargado
+                for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+                    const prev = frameImages[currentFrameIndex - offset];
+                    if (prev && prev.complete) { drawCoverImage(prev); break; }
+                    const next = frameImages[currentFrameIndex + offset];
+                    if (next && next.complete) { drawCoverImage(next); break; }
+                }
             }
+        }
 
-            // Realiza el seek directo al fotograma exacto sin retardos ni inercia
-            function performDirectSeek(target) {
-                if (isSeeking) {
-                    queuedTime = target;
-                    return;
-                }
+        function updateFrameOnScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+            const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+            const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+            const targetIndex = Math.min(Math.max(Math.floor(scrollFraction * TOTAL_FRAMES), 0), TOTAL_FRAMES - 1);
 
-                // Zona muerta mínima (< 1 fotograma = 0.02s)
-                if (Math.abs(video.currentTime - target) < 0.02) {
-                    return;
-                }
+            if (targetIndex !== currentFrameIndex) {
+                currentFrameIndex = targetIndex;
+                requestAnimationFrame(renderCurrentFrame);
+            }
+        }
 
-                isSeeking = true;
-                queuedTime = null;
-                video.currentTime = target;
+        function initFrameSequence() {
+            if (!canvas || !ctx) return;
+            resizeCanvas();
 
-                // Watchdog de seguridad (40ms): garantiza que jamás se bloquee si el navegador retrasa 'seeked'
-                if (watchdogTimer) clearTimeout(watchdogTimer);
-                watchdogTimer = setTimeout(() => {
-                    isSeeking = false;
-                    if (queuedTime !== null) {
-                        const next = queuedTime;
-                        queuedTime = null;
-                        performDirectSeek(next);
+            // 1. Cargar y pintar de inmediato el primer frame (arranque instantáneo)
+            const firstFrame = new Image();
+            firstFrame.src = getFramePath(0);
+            firstFrame.onload = () => {
+                frameImages[0] = firstFrame;
+                renderCurrentFrame();
+                isInitialFrameRendered = true;
+            };
+
+            // 2. Pre-cargar el resto de la secuencia en segundo plano
+            for (let i = 0; i < TOTAL_FRAMES; i++) {
+                if (i === 0) continue;
+                const img = new Image();
+                img.src = getFramePath(i);
+                img.onload = () => {
+                    frameImages[i] = img;
+                    if (i === currentFrameIndex) {
+                        requestAnimationFrame(renderCurrentFrame);
                     }
-                }, 40);
+                };
             }
 
-            video.addEventListener('seeked', () => {
-                isSeeking = false;
-                if (watchdogTimer) clearTimeout(watchdogTimer);
-                if (queuedTime !== null) {
-                    const next = queuedTime;
-                    queuedTime = null;
-                    performDirectSeek(next);
-                }
-            });
+            // 3. Event listeners ultra-reactivos para móvil (touch) y desktop (mouse/trackpad)
+            window.addEventListener('scroll', updateFrameOnScroll, { passive: true });
+            window.addEventListener('touchmove', updateFrameOnScroll, { passive: true });
+            window.addEventListener('resize', resizeCanvas, { passive: true });
+            window.addEventListener('orientationchange', resizeCanvas, { passive: true });
 
-            function triggerScrollSync() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-                const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
-                const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
-
-                if (duration > 0) {
-                    const target = Math.min(Math.max(scrollFraction * duration, 0.01), duration - 0.01);
-                    performDirectSeek(target);
-                }
-            }
-
-            // Listeners directos para garantizar respuesta inmediata tanto en mouse/trackpad como en touch
-            window.addEventListener('scroll', triggerScrollSync, { passive: true });
-            window.addEventListener('touchmove', triggerScrollSync, { passive: true });
-            window.addEventListener('resize', triggerScrollSync, { passive: true });
-            
-            triggerScrollSync();
+            updateFrameOnScroll();
         }
 
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initVideoSync);
+            document.addEventListener('DOMContentLoaded', initFrameSequence);
         } else {
-            initVideoSync();
+            initFrameSequence();
         }
 
         /* ===========================================================
