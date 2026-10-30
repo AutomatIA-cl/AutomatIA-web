@@ -276,12 +276,12 @@
                 <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] font-normal leading-snug">
                     …¿Tienes un negocio, o la idea para uno?
                 </p>
-                <p class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-brand-gold tracking-tight pt-2 drop-shadow-[0_4px_18px_rgba(245,166,35,0.5)]">
+                <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-brand-gold tracking-tight pt-2 drop-shadow-[0_4px_18px_rgba(245,166,35,0.5)]">
                     ¡¡ Imagina el viaje !!
                 </p>
                 
-                <!-- BAJADA: Acompañamos e impulsamos tu proyecto EN CURSIVA, COLOR BLANCO Y TAMAÑO SIMILAR A AUTOMATIA -->
-                <p class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif italic font-normal text-white drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] tracking-tight leading-tight text-center my-4">
+                <!-- BAJADA: Acompañamos e impulsamos tu proyecto IGUAL AL TAMAÑO DE LAS PREGUNTAS -->
+                <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic font-normal text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] leading-snug text-center my-3">
                     Acompañamos e impulsamos tu proyecto.
                 </p>
             </div>
@@ -351,8 +351,8 @@
                         
                         <ul class="space-y-3.5 text-brand-silver text-sm">
                             <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Identidad de Marca:</strong> Logo, colorimetría, gráfica, eslogan y bajadas</span></li>
-                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi primera WEB</span></li>
-                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi primer Landing Page con embudo de venta para captura de Leads</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi nueva o primera WEB</span></li>
+                            <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi nueva o primer Landing Page con embudo de venta para captura de Leads</span></li>
                             <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Marketing Digital &amp; Herramientas de Neuromarketing</span></li>
                             <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Agentes automatizados para generar presencia en Redes Sociales y LinkedIn</span></li>
                             <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Plan de Community Manager</span></li>
@@ -407,10 +407,10 @@
                     Regalo Exclusivo por Tiempo Limitado
                 </span>
                 <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mb-4 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-                    Obtén tu Primera <span class="text-brand-gold border-b-2 border-brand-gold">Máquina de Ventas</span>
+                    Obtén <span class="text-brand-teal font-extrabold uppercase">GRATIS</span> tu Primera <span class="text-brand-gold border-b-2 border-brand-gold">Máquina de Ventas</span>
                 </h2>
                 <p class="text-brand-silver text-sm sm:text-base font-light max-w-lg mx-auto md:mx-0 leading-relaxed">
-                    Usa gratis nuestro <strong>Creador de Landing Pages con IA</strong>. Diseña en 2 minutos una web de alta conversión con metodología AIDA, botón de WhatsApp y código HTML listo para descargar y publicar.
+                    Usa gratis nuestro Creador de Landing Pages con IA. Diseña en 2 minutos una web de alta conversión con metodología AIDA, botón de WhatsApp y código HTML listo para descargar y publicar.
                 </p>
             </div>
             
@@ -969,11 +969,8 @@
     <!-- SCRIPTS -->
     <script>
         /* ===========================================================
-           SINCRONIZACIÓN FLUIDA DE VIDEO HERO (RESPONSIVE & GPU ACCELERATED)
-           - En Móvil / Touch: Reproducción continua a 60 FPS en bucle suave 
-             con aceleración por hardware y efecto parallax sutil en GPU.
-             Elimina los saltos y tirones de decodificación forzada en chips móviles.
-           - En Desktop: Scrubbing de alta precisión con lerp suave y throttling.
+           SINCRONIZACIÓN FLUIDA DE VIDEO CON EL SCROLL (DESKTOP Y MÓVIL)
+           Control bidireccional continuo optimizado para decodificación móvil y desktop.
            =========================================================== */
         const video = document.getElementById('bg-scroll-video');
         let targetTime = 0;
@@ -981,67 +978,14 @@
         let duration = 0;
         let seekTimeout = null;
 
-        function checkIsMobile() {
-            return window.innerWidth <= 768 || 
-                   ('ontouchstart' in window && !window.matchMedia('(min-width: 1024px)').matches) ||
-                   /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
         function initVideoSync() {
             if (!video) return;
 
-            const isMobile = checkIsMobile();
-
-            if (isMobile) {
-                // MODO MÓVIL: Autoplay fluido a 60fps continuo sin seeks bruscos
-                video.loop = true;
-                video.muted = true;
-                video.playsInline = true;
-                video.setAttribute('playsinline', '');
-                video.setAttribute('webkit-playsinline', '');
-                
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        const startOnTouch = () => {
-                            video.play().catch(() => {});
-                            window.removeEventListener('touchstart', startOnTouch);
-                            window.removeEventListener('scroll', startOnTouch);
-                        };
-                        window.addEventListener('touchstart', startOnTouch, { passive: true });
-                        window.addEventListener('scroll', startOnTouch, { passive: true });
-                    });
-                }
-
-                // Parallax suave y control de visibilidad al scroll (GPU accelerated)
-                let ticking = false;
-                function onMobileScroll() {
-                    if (!ticking) {
-                        requestAnimationFrame(() => {
-                            const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-                            const heroHeight = window.innerHeight;
-                            
-                            // Si el usuario bajó más allá del Hero, pausar para ahorrar batería
-                            if (scrollY > heroHeight * 1.6) {
-                                if (!video.paused) video.pause();
-                            } else {
-                                if (video.paused) video.play().catch(() => {});
-                                // Efecto cinemático sutil de escala al bajar
-                                const scale = 1 + Math.min(scrollY / (heroHeight * 2), 0.12);
-                                video.style.transform = `translate(-50%, -50%) scale(${scale})`;
-                            }
-                            ticking = false;
-                        });
-                        ticking = true;
-                    }
-                }
-
-                window.addEventListener('scroll', onMobileScroll, { passive: true });
-                return;
-            }
-
-            // MODO ESCRITORIO: Scrubbing suave con lerp e interpolación limpia
             video.pause();
+            video.muted = true;
+            video.playsInline = true;
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
 
             function onMetadata() {
                 duration = video.duration || 11;
@@ -1060,38 +1004,38 @@
                 const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
 
                 if (duration > 0) {
-                    targetTime = Math.min(Math.max(scrollFraction * duration, 0.05), duration - 0.05);
+                    targetTime = Math.min(Math.max(scrollFraction * duration, 0.02), duration - 0.02);
                 }
             }
 
             window.addEventListener('scroll', updateScrollTarget, { passive: true });
-            window.addEventListener('resize', () => {
-                if (checkIsMobile()) {
-                    initVideoSync();
-                } else {
-                    updateScrollTarget();
-                }
-            }, { passive: true });
+            window.addEventListener('resize', updateScrollTarget, { passive: true });
+            window.addEventListener('touchmove', updateScrollTarget, { passive: true });
 
             video.addEventListener('seeked', () => {
                 isSeeking = false;
                 if (seekTimeout) clearTimeout(seekTimeout);
             });
 
-            // Bucle suave con requestAnimationFrame y suavizado exponencial (lerp)
+            // Bucle adaptativo: usa fastSeek si está disponible (Chromium/Android/iOS 16+), evitando fricción y trabas
             function syncLoop() {
                 if (duration > 0 && !isSeeking) {
                     const diff = targetTime - video.currentTime;
-                    // Solo seeking si hay diferencia apreciable (> 0.04s)
                     if (Math.abs(diff) > 0.04) {
                         isSeeking = true;
-                        const step = video.currentTime + diff * 0.2;
-                        video.currentTime = Math.min(Math.max(step, 0), duration);
+                        const step = video.currentTime + diff * 0.28;
+                        const nextTime = Math.min(Math.max(step, 0), duration);
 
-                        // Timeout de seguridad para evitar que isSeeking quede trabado
+                        if ('fastSeek' in video) {
+                            video.fastSeek(nextTime);
+                        } else {
+                            video.currentTime = nextTime;
+                        }
+
+                        // Timeout de seguridad de 80ms para evitar bloqueos en chips celulares
                         seekTimeout = setTimeout(() => {
                             isSeeking = false;
-                        }, 120);
+                        }, 80);
                     }
                 }
                 requestAnimationFrame(syncLoop);
