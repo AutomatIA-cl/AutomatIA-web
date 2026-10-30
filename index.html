@@ -972,21 +972,17 @@
     <!-- SCRIPTS -->
     <script>
         /* ===========================================================
-           SINCRONIZACIÓN FLUIDA DE VIDEO AL SCROLL (ADELANTE / ATRÁS / PAUSA)
-           Cumple las 3 condiciones exactas:
+           SINCRONIZACIÓN DE VIDEO AL SCROLL BIDIRECCIONAL (PC, LAPTOP Y MÓVIL)
+           Cumple estrictamente las 3 condiciones:
            1. Avanza hacia adelante en sincronía con el scroll hacia abajo.
            2. Retrocede hacia atrás en sincronía con el scroll hacia arriba.
-           3. Se detiene de inmediato cuando el scroll se detiene.
-           - Cero fricción: elimina los retardos de lerp pesado y usa un
-             pipeline de seek directo y no bloqueante.
-           - Video pre-optimizado con FastStart (moov atom al inicio).
+           3. Se detiene de inmediato cuando el scroll se detiene (cero inercia, cero reproducciones fantasma).
            =========================================================== */
         const video = document.getElementById('bg-scroll-video');
-        let duration = 0;
+        let duration = 11.05; // Duración exacta del video pre-cargada
         let isSeeking = false;
         let queuedTime = null;
         let watchdogTimer = null;
-        let lastSampledScroll = -1;
 
         function initVideoSync() {
             if (!video) return;
@@ -997,22 +993,8 @@
             video.setAttribute('playsinline', '');
             video.setAttribute('webkit-playsinline', '');
 
-            // Calentamiento del pipeline de hardware en móviles (iOS Safari / Android)
-            // para que los seeks respondan al instante sin demoras
-            const primeDecoder = () => {
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        video.pause();
-                    }).catch(() => {});
-                }
-            };
-            primeDecoder();
-            window.addEventListener('touchstart', primeDecoder, { once: true, passive: true });
-            window.addEventListener('scroll', primeDecoder, { once: true, passive: true });
-
             function onMetadata() {
-                duration = video.duration || 11.07;
+                duration = video.duration || 11.05;
                 triggerScrollSync();
             }
 
@@ -1022,25 +1004,23 @@
                 video.addEventListener('loadedmetadata', onMetadata);
             }
 
-            // Realiza el seek directo a la posición exacta del dedo/rueda sin fricción artificial
+            // Realiza el seek directo al fotograma exacto sin retardos ni inercia
             function performDirectSeek(target) {
                 if (isSeeking) {
                     queuedTime = target;
                     return;
                 }
 
-                // Zona muerta mínima (0.025s = menos de 1 fotograma a 30fps)
-                if (Math.abs(video.currentTime - target) < 0.025) {
+                // Zona muerta mínima (< 1 fotograma = 0.02s)
+                if (Math.abs(video.currentTime - target) < 0.02) {
                     return;
                 }
 
                 isSeeking = true;
                 queuedTime = null;
-
-                // Salto directo al cuadro exacto
                 video.currentTime = target;
 
-                // Watchdog de seguridad (50ms): evita que isSeeking quede trabado en móviles
+                // Watchdog de seguridad (40ms): garantiza que jamás se bloquee si el navegador retrasa 'seeked'
                 if (watchdogTimer) clearTimeout(watchdogTimer);
                 watchdogTimer = setTimeout(() => {
                     isSeeking = false;
@@ -1049,7 +1029,7 @@
                         queuedTime = null;
                         performDirectSeek(next);
                     }
-                }, 50);
+                }, 40);
             }
 
             video.addEventListener('seeked', () => {
@@ -1073,20 +1053,12 @@
                 }
             }
 
-            // Bucle a la tasa de refresco nativa de la pantalla (60Hz / 90Hz / 120Hz)
-            // Solo ejecuta si el usuario realmente movió el scroll.
-            // Si el scroll se detiene, el video se detiene de inmediato.
-            function renderLoop() {
-                const currentScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
-                if (currentScroll !== lastSampledScroll) {
-                    lastSampledScroll = currentScroll;
-                    triggerScrollSync();
-                }
-                requestAnimationFrame(renderLoop);
-            }
-
-            requestAnimationFrame(renderLoop);
+            // Listeners directos para garantizar respuesta inmediata tanto en mouse/trackpad como en touch
+            window.addEventListener('scroll', triggerScrollSync, { passive: true });
+            window.addEventListener('touchmove', triggerScrollSync, { passive: true });
             window.addEventListener('resize', triggerScrollSync, { passive: true });
+            
+            triggerScrollSync();
         }
 
         if (document.readyState === 'loading') {
