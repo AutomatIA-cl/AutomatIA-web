@@ -180,16 +180,14 @@
 </head>
 <body class="bg-brand-navyDark text-brand-light font-sans antialiased selection:bg-brand-teal selection:text-brand-navy overflow-x-hidden relative">
 
-    <!-- FONDO FIJO CON VIDEO RESPONSIVO (60FPS CONTINUO EN MÓVIL / SYNC EN DESKTOP) -->
+    <!-- FONDO FIJO CON VIDEO SINCRONIZADO AL SCROLL (ADELANTE / ATRÁS / PAUSA) -->
     <div id="fixed-video-bg" aria-hidden="true">
         <video id="bg-scroll-video" 
                src="assets/Video_Hero_definitivo.mp4" 
                poster="assets/Frame_intermedio_helipuerto.jpg"
-               autoplay
                playsinline 
                webkit-playsinline
                muted 
-               loop
                preload="auto" 
                class="w-full h-full object-cover">
         </video>
@@ -974,98 +972,48 @@
     <!-- SCRIPTS -->
     <script>
         /* ===========================================================
-           CONTROL DEFINITIVO DE VIDEO HERO (MOBILE & DESKTOP)
-           - En Móvil / Touch: Reproducción continua a 60 FPS en bucle suave 
-             con aceleración nativa por GPU y efecto parallax tridimensional al scroll.
-             NUNCA se manipula currentTime ni fastSeek durante el scroll táctil,
-             eliminando al 100% los saltos, congelamientos y tirones de decodificación.
-             Se pausa automáticamente al salir del Hero para ahorrar batería.
-           - En Desktop: Scrubbing suave con lerp e interpolación limpia sin fastSeek.
+           SINCRONIZACIÓN FLUIDA DE VIDEO AL SCROLL (ADELANTE / ATRÁS / PAUSA)
+           Cumple las 3 condiciones exactas:
+           1. Avanza hacia adelante en sincronía con el scroll hacia abajo.
+           2. Retrocede hacia atrás en sincronía con el scroll hacia arriba.
+           3. Se detiene de inmediato cuando el scroll se detiene.
+           - Cero fricción: elimina los retardos de lerp pesado y usa un
+             pipeline de seek directo y no bloqueante.
+           - Video pre-optimizado con FastStart (moov atom al inicio).
            =========================================================== */
         const video = document.getElementById('bg-scroll-video');
-
-        function isMobileDevice() {
-            return window.innerWidth <= 1024 ||
-                   ('ontouchstart' in window) ||
-                   (navigator.maxTouchPoints > 0) ||
-                   /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
+        let duration = 0;
+        let isSeeking = false;
+        let queuedTime = null;
+        let watchdogTimer = null;
+        let lastSampledScroll = -1;
 
         function initVideoSync() {
             if (!video) return;
 
-            const isMobile = isMobileDevice();
-
-            if (isMobile) {
-                // =====================================================
-                // SOLUCIÓN DEFINITIVA PARA MÓVIL:
-                // 1. Reproducción continua y sedosa a 60 FPS sin tirones
-                // 2. Cero manipulación de currentTime (elimina 100% los saltos)
-                // 3. Parallax cinemático fluido en GPU al hacer scroll
-                // =====================================================
-                video.muted = true;
-                video.loop = true;
-                video.playsInline = true;
-                video.setAttribute('playsinline', '');
-                video.setAttribute('webkit-playsinline', '');
-
-                const startPlayback = () => {
-                    const promise = video.play();
-                    if (promise !== undefined) {
-                        promise.catch(() => {
-                            // Si el SO móvil bloquea autoplay, arrancar al primer touch o scroll
-                            const resumeOnce = () => {
-                                video.play().catch(() => {});
-                                window.removeEventListener('touchstart', resumeOnce);
-                                window.removeEventListener('scroll', resumeOnce);
-                            };
-                            window.addEventListener('touchstart', resumeOnce, { passive: true });
-                            window.addEventListener('scroll', resumeOnce, { passive: true });
-                        });
-                    }
-                };
-
-                startPlayback();
-
-                // Parallax suave en GPU (translate3d) que acompaña el scroll sin tocar el video
-                let ticking = false;
-                function onMobileScroll() {
-                    if (!ticking) {
-                        requestAnimationFrame(() => {
-                            const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-                            const heroHeight = window.innerHeight || 800;
-
-                            // Pausar si baja más allá del hero para ahorrar batería
-                            if (scrollY > heroHeight * 1.5) {
-                                if (!video.paused) video.pause();
-                            } else {
-                                if (video.paused) video.play().catch(() => {});
-                                const translateY = -(scrollY * 0.12);
-                                const scale = 1 + Math.min(scrollY / (heroHeight * 3), 0.08);
-                                video.style.transform = `translate3d(-50%, calc(-50% + ${translateY}px), 0) scale(${scale})`;
-                            }
-                            ticking = false;
-                        });
-                        ticking = true;
-                    }
-                }
-
-                window.addEventListener('scroll', onMobileScroll, { passive: true });
-                return;
-            }
-
-            // =====================================================
-            // MODO ESCRITORIO: Scrubbing suave con lerp sin fastSeek
-            // =====================================================
             video.pause();
-            let duration = 0;
-            let targetTime = 0;
-            let isSeeking = false;
-            let seekTimer = null;
+            video.muted = true;
+            video.playsInline = true;
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+
+            // Calentamiento del pipeline de hardware en móviles (iOS Safari / Android)
+            // para que los seeks respondan al instante sin demoras
+            const primeDecoder = () => {
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        video.pause();
+                    }).catch(() => {});
+                }
+            };
+            primeDecoder();
+            window.addEventListener('touchstart', primeDecoder, { once: true, passive: true });
+            window.addEventListener('scroll', primeDecoder, { once: true, passive: true });
 
             function onMetadata() {
-                duration = video.duration || 11;
-                updateScrollTarget();
+                duration = video.duration || 11.07;
+                triggerScrollSync();
             }
 
             if (video.readyState >= 1) {
@@ -1074,48 +1022,71 @@
                 video.addEventListener('loadedmetadata', onMetadata);
             }
 
-            function updateScrollTarget() {
+            // Realiza el seek directo a la posición exacta del dedo/rueda sin fricción artificial
+            function performDirectSeek(target) {
+                if (isSeeking) {
+                    queuedTime = target;
+                    return;
+                }
+
+                // Zona muerta mínima (0.025s = menos de 1 fotograma a 30fps)
+                if (Math.abs(video.currentTime - target) < 0.025) {
+                    return;
+                }
+
+                isSeeking = true;
+                queuedTime = null;
+
+                // Salto directo al cuadro exacto
+                video.currentTime = target;
+
+                // Watchdog de seguridad (50ms): evita que isSeeking quede trabado en móviles
+                if (watchdogTimer) clearTimeout(watchdogTimer);
+                watchdogTimer = setTimeout(() => {
+                    isSeeking = false;
+                    if (queuedTime !== null) {
+                        const next = queuedTime;
+                        queuedTime = null;
+                        performDirectSeek(next);
+                    }
+                }, 50);
+            }
+
+            video.addEventListener('seeked', () => {
+                isSeeking = false;
+                if (watchdogTimer) clearTimeout(watchdogTimer);
+                if (queuedTime !== null) {
+                    const next = queuedTime;
+                    queuedTime = null;
+                    performDirectSeek(next);
+                }
+            });
+
+            function triggerScrollSync() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
                 const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
                 const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
 
                 if (duration > 0) {
-                    targetTime = Math.min(Math.max(scrollFraction * duration, 0.04), duration - 0.04);
+                    const target = Math.min(Math.max(scrollFraction * duration, 0.01), duration - 0.01);
+                    performDirectSeek(target);
                 }
             }
 
-            window.addEventListener('scroll', updateScrollTarget, { passive: true });
-            window.addEventListener('resize', () => {
-                if (isMobileDevice()) {
-                    initVideoSync();
-                } else {
-                    updateScrollTarget();
+            // Bucle a la tasa de refresco nativa de la pantalla (60Hz / 90Hz / 120Hz)
+            // Solo ejecuta si el usuario realmente movió el scroll.
+            // Si el scroll se detiene, el video se detiene de inmediato.
+            function renderLoop() {
+                const currentScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+                if (currentScroll !== lastSampledScroll) {
+                    lastSampledScroll = currentScroll;
+                    triggerScrollSync();
                 }
-            }, { passive: true });
-
-            video.addEventListener('seeked', () => {
-                isSeeking = false;
-                if (seekTimer) clearTimeout(seekTimer);
-            });
-
-            function desktopSyncLoop() {
-                if (duration > 0 && !isSeeking) {
-                    const diff = targetTime - video.currentTime;
-                    if (Math.abs(diff) > 0.03) {
-                        isSeeking = true;
-                        const step = video.currentTime + diff * 0.22;
-                        video.currentTime = Math.min(Math.max(step, 0), duration);
-
-                        seekTimer = setTimeout(() => {
-                            isSeeking = false;
-                        }, 100);
-                    }
-                }
-                requestAnimationFrame(desktopSyncLoop);
+                requestAnimationFrame(renderLoop);
             }
 
-            requestAnimationFrame(desktopSyncLoop);
-            updateScrollTarget();
+            requestAnimationFrame(renderLoop);
+            window.addEventListener('resize', triggerScrollSync, { passive: true });
         }
 
         if (document.readyState === 'loading') {
