@@ -7,6 +7,9 @@
     <meta name="description" content="AutomatIA: Agencia de desarrollo de negocios y escalabilidad digital. Construimos el sistema operativo inteligente de tu empresa con IA. Diagnóstico gratis.">
     <meta name="theme-color" content="#0A1628">
 
+    <!-- Preload del primer frame en WebP para arranque inmediato sin parpadeos ni pausas en negro -->
+    <link rel="preload" as="image" href="assets/hero-frames/frame_000.webp" type="image/webp">
+
     <!-- Open Graph / Redes sociales -->
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_CL">
@@ -173,7 +176,7 @@
     <!-- FONDO FIJO CON SECUENCIA DE FRAMES EN CANVAS (SIN FRICCIÓN, BIDIRECCIONAL Y REACTIVO) -->
     <div id="fixed-video-bg" aria-hidden="true">
         <img id="bg-canvas-fallback" 
-             src="assets/Frame_intermedio_helipuerto.jpg" 
+             src="assets/hero-frames/frame_000.webp" 
              alt="" 
              class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none">
         <canvas id="bg-scroll-canvas" class="relative z-10"></canvas>
@@ -967,12 +970,13 @@
            - Respaldo de imagen póster permanente en la capa inferior.
            =========================================================== */
         const canvas = document.getElementById('bg-scroll-canvas');
-        const ctx = canvas ? canvas.getContext('2d', { alpha: false }) : null;
+        const ctx = canvas ? canvas.getContext('2d') : null;
         const TOTAL_FRAMES = 120;
         const FRAME_WIDTH = 1280;
         const FRAME_HEIGHT = 720;
         const frameImages = new Array(TOTAL_FRAMES);
 
+        let targetRenderIndex = 0;
         let currentRenderedIndex = -1;
         let isTicking = false;
 
@@ -1025,6 +1029,7 @@
                     const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
                     const targetIndex = Math.min(Math.max(Math.round(scrollFraction * (TOTAL_FRAMES - 1)), 0), TOTAL_FRAMES - 1);
 
+                    targetRenderIndex = targetIndex;
                     if (targetIndex !== currentRenderedIndex) {
                         renderFrame(targetIndex);
                     }
@@ -1075,7 +1080,7 @@
                     img.src = getFramePath(idx);
                     try { if ('decode' in img) await img.decode(); } catch(e) {}
                     frameImages[idx] = img;
-                    if (idx === currentRenderedIndex) renderFrame(idx);
+                    if (idx === targetRenderIndex) renderFrame(idx);
                 }));
             }
         }
