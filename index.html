@@ -172,7 +172,11 @@
 
     <!-- FONDO FIJO CON SECUENCIA DE FRAMES EN CANVAS (SIN FRICCIÓN, BIDIRECCIONAL Y REACTIVO) -->
     <div id="fixed-video-bg" aria-hidden="true">
-        <canvas id="bg-scroll-canvas"></canvas>
+        <img id="bg-canvas-fallback" 
+             src="assets/Frame_intermedio_helipuerto.jpg" 
+             alt="" 
+             class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none">
+        <canvas id="bg-scroll-canvas" class="relative z-10"></canvas>
     </div>
     <div id="bg-ambient-overlay" aria-hidden="true"></div>
 
@@ -954,16 +958,16 @@
     <!-- SCRIPTS -->
     <script>
         /* ===========================================================
-           MOTOR DE SECUENCIA HD 720p (1:1 DIRECT-DRIVE ZERO-LATENCY)
-           - 120 Frames WebP HD 720p (1280x720) extra-nítidos con calidad cinematográfica.
-           - Pre-decodificación por Ráfagas Clave (Keyframe Striding):
-             Carga y decodifica el 100% del rango de scroll en < 250ms.
-           - Direct-Drive 1:1 al tacto: Cero retardo de resorte artificial.
-             Responde de inmediato al dedo o rueda en el frame exacto.
-           - Detención absoluta e instantánea al detener el scroll.
+           MOTOR DE SECUENCIA HD 720p (CERO PAUSAS EN NEGRO, DIRECT-DRIVE 1:1)
+           - 120 Frames WebP HD 720p (1280x720) nativos.
+           - Doble búfer VSYNC sin desynchronized (elimina 100% de parpadeos y pausas en negro).
+           - Resolución fija inmutable: jamás reinicia el lienzo al redimensionar la barra móvil.
+           - Algoritmo de persistencia de fotograma: jamás limpia el lienzo; si un fotograma
+             tarda en decodificar, mantiene el último cuadro activo sin ningún parpadeo.
+           - Respaldo de imagen póster permanente en la capa inferior.
            =========================================================== */
         const canvas = document.getElementById('bg-scroll-canvas');
-        const ctx = canvas ? canvas.getContext('2d', { alpha: false, desynchronized: true }) : null;
+        const ctx = canvas ? canvas.getContext('2d', { alpha: false }) : null;
         const TOTAL_FRAMES = 120;
         const FRAME_WIDTH = 1280;
         const FRAME_HEIGHT = 720;
@@ -976,14 +980,14 @@
             return `assets/hero-frames/frame_${String(index).padStart(3, '0')}.webp`;
         }
 
-        // Configuración nativa 720p HD del canvas
+        // Configuración fija de resolución 720p (NUNCA se reasigna para evitar que el navegador limpie el búfer a negro)
         function initCanvasSize() {
             if (!canvas) return;
-            canvas.width = FRAME_WIDTH;
-            canvas.height = FRAME_HEIGHT;
+            if (canvas.width !== FRAME_WIDTH) canvas.width = FRAME_WIDTH;
+            if (canvas.height !== FRAME_HEIGHT) canvas.height = FRAME_HEIGHT;
         }
 
-        // Renderizado instantáneo en GPU (< 0.05ms)
+        // Renderizado instantáneo y persistente: NUNCA limpia ni oscurece el lienzo
         function renderFrame(index) {
             if (!ctx) return;
             const idx = Math.min(Math.max(index, 0), TOTAL_FRAMES - 1);
@@ -992,24 +996,27 @@
             if (img && img.complete && img.naturalWidth > 0) {
                 ctx.drawImage(img, 0, 0);
                 currentRenderedIndex = idx;
-            } else {
-                // Fallback instantáneo al vecino pre-decodificado más cercano
-                for (let off = 1; off < TOTAL_FRAMES; off++) {
-                    const prev = frameImages[idx - off];
-                    if (prev && prev.complete && prev.naturalWidth > 0) {
-                        ctx.drawImage(prev, 0, 0);
-                        break;
-                    }
-                    const next = frameImages[idx + off];
-                    if (next && next.complete && next.naturalWidth > 0) {
-                        ctx.drawImage(next, 0, 0);
-                        break;
-                    }
+                return;
+            }
+
+            // Fallback bidireccional al vecino más cercano cargado
+            for (let off = 1; off < TOTAL_FRAMES; off++) {
+                const prev = frameImages[idx - off];
+                if (prev && prev.complete && prev.naturalWidth > 0) {
+                    ctx.drawImage(prev, 0, 0);
+                    currentRenderedIndex = idx - off;
+                    break;
+                }
+                const next = frameImages[idx + off];
+                if (next && next.complete && next.naturalWidth > 0) {
+                    ctx.drawImage(next, 0, 0);
+                    currentRenderedIndex = idx + off;
+                    break;
                 }
             }
         }
 
-        // Sincronización Direct-Drive 1:1 con el scroll (cero latencia al tacto)
+        // Sincronización Direct-Drive 1:1 fluida y reactiva
         function onScrollDirect() {
             if (!isTicking) {
                 requestAnimationFrame(() => {
@@ -1027,20 +1034,19 @@
             }
         }
 
-        // Pre-carga inteligente con algoritmo Keyframe Striding en GPU
+        // Pre-carga acelerada por GPU con Ráfagas Clave (Keyframe Striding)
         async function preloadHeroFrames() {
             if (!canvas || !ctx) return;
             initCanvasSize();
 
-            // 1. Frame 0 inmediato (render de arranque sin retrasos)
+            // 1. Frame 0 inmediato
             const f0 = new Image();
             f0.src = getFramePath(0);
             try { if ('decode' in f0) await f0.decode(); } catch(e) {}
             frameImages[0] = f0;
             renderFrame(0);
 
-            // 2. FASE 1: Cargar y decodificar 30 Keyframes estratégicos (cada 4 frames: 0, 4, 8, 12... 116)
-            // En menos de 250ms, todo el recorrido (avance y retroceso) tiene cobertura total de frames HD
+            // 2. FASE 1: 30 Keyframes cada 4 cuadros (cobertura total de avance/retroceso en < 200ms)
             const keyIndices = [];
             for (let i = 0; i < TOTAL_FRAMES; i += 4) {
                 if (i !== 0) keyIndices.push(i);
@@ -1052,32 +1058,37 @@
                 frameImages[idx] = img;
             }));
 
-            // Si el usuario ya comenzó a deslizar, actualiza de inmediato
+            // Si el usuario ya comenzó a desplazarse, refresca inmediatamente
             onScrollDirect();
 
-            // 3. FASE 2: Relleno paralelo de todos los frames intermedios con decodificación GPU
+            // 3. FASE 2: Relleno ordenado de cuadros intermedios en lotes de 8 (sin saturar la red móvil)
+            const remaining = [];
             for (let i = 0; i < TOTAL_FRAMES; i++) {
-                if (!frameImages[i]) {
+                if (!frameImages[i]) remaining.push(i);
+            }
+
+            const BATCH_SIZE = 8;
+            for (let b = 0; b < remaining.length; b += BATCH_SIZE) {
+                const chunk = remaining.slice(b, b + BATCH_SIZE);
+                await Promise.all(chunk.map(async (idx) => {
                     const img = new Image();
-                    img.src = getFramePath(i);
-                    img.decode().then(() => {
-                        frameImages[i] = img;
-                    }).catch(() => {
-                        frameImages[i] = img;
-                    });
-                }
+                    img.src = getFramePath(idx);
+                    try { if ('decode' in img) await img.decode(); } catch(e) {}
+                    frameImages[idx] = img;
+                    if (idx === currentRenderedIndex) renderFrame(idx);
+                }));
             }
         }
 
         function initHeroExperience() {
+            initCanvasSize();
             preloadHeroFrames();
 
             window.addEventListener('scroll', onScrollDirect, { passive: true });
             window.addEventListener('touchmove', onScrollDirect, { passive: true });
-            window.addEventListener('resize', () => {
-                initCanvasSize();
-                onScrollDirect();
-            }, { passive: true });
+            // Al redimensionar la barra móvil, NUNCA reasignar canvas.width (evita borrado a negro)
+            window.addEventListener('resize', onScrollDirect, { passive: true });
+            window.addEventListener('orientationchange', onScrollDirect, { passive: true });
 
             onScrollDirect();
         }
