@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,19 +64,21 @@
         ::-webkit-scrollbar-thumb { background: #00B8A9; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #F5A623; }
 
-        /* Contenedor del fondo con soporte dvh para móviles y aceleración GPU */
+        /* Contenedor del fondo bloqueado a la pantalla física sin reescalados por barra móvil */
         #fixed-video-bg {
             position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
             z-index: -20;
             overflow: hidden;
             pointer-events: none;
             background-color: #050B14;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0, 0, 0);
         }
 
         /* Canvas de alto rendimiento HD 720p acelerado por GPU */
@@ -961,13 +963,18 @@
     <!-- SCRIPTS -->
     <script>
         /* ===========================================================
-           MOTOR DE SECUENCIA HD 720p (CERO PAUSAS EN NEGRO, DIRECT-DRIVE 1:1)
-           - 120 Frames WebP HD 720p (1280x720) nativos.
-           - Doble búfer VSYNC sin desynchronized (elimina 100% de parpadeos y pausas en negro).
-           - Resolución fija inmutable: jamás reinicia el lienzo al redimensionar la barra móvil.
-           - Algoritmo de persistencia de fotograma: jamás limpia el lienzo; si un fotograma
-             tarda en decodificar, mantiene el último cuadro activo sin ningún parpadeo.
-           - Respaldo de imagen póster permanente en la capa inferior.
+           MOTOR DE SECUENCIA HD 720p (CERO FRICCIÓN, DIRECT-DRIVE 1:1)
+           - Precarga progresiva continua en dirección del scroll:
+             Tier 1 (Frames 0 a 29): 100% consecutivos cargados de inmediato.
+             Cubre toda la sección Hero y Soluciones ("Soluciones diseñadas a la medida")
+             con densidad completa de fotogramas, eliminando saltos de 4 frames.
+             Tiers 2, 3 y 4 (Frames 30 a 119) se precargan ordenadamente en chunks de 5.
+           - Eliminación de listener touchmove:
+             El scroll nativo del compositor maneja de forma continua y sin desfasajes
+             tanto el arrastre del dedo como el lanzamiento con inercia (fling).
+           - Medición de scroll en caché:
+             Evita recalcular dimensiones del layout en cada frame de animación.
+           - Detención instantánea y sincronía bidireccional absoluta.
            =========================================================== */
         const canvas = document.getElementById('bg-scroll-canvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
@@ -979,22 +986,53 @@
         let targetRenderIndex = 0;
         let currentRenderedIndex = -1;
         let isTicking = false;
+        let cachedMaxScroll = 1;
 
         function getFramePath(index) {
             return `assets/hero-frames/frame_${String(index).padStart(3, '0')}.webp`;
         }
 
-        // Configuración fija de resolución 720p (NUNCA se reasigna para evitar que el navegador limpie el búfer a negro)
+        function updateMaxScroll() {
+            const docEl = document.documentElement;
+            const body = document.body;
+            const scrollHeight = Math.max(docEl.scrollHeight, body ? body.scrollHeight : 0);
+            cachedMaxScroll = Math.max(scrollHeight - window.innerHeight, 1);
+        }
+
+        // Configuración fija de resolución 720p (NUNCA se reasigna para evitar borrado a negro)
         function initCanvasSize() {
             if (!canvas) return;
             if (canvas.width !== FRAME_WIDTH) canvas.width = FRAME_WIDTH;
             if (canvas.height !== FRAME_HEIGHT) canvas.height = FRAME_HEIGHT;
         }
 
+        // Carga y decodifica un fotograma individual
+        function loadFrame(idx) {
+            if (frameImages[idx]) return Promise.resolve(frameImages[idx]);
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = getFramePath(idx);
+                img.onload = () => {
+                    frameImages[idx] = img;
+                    if ('decode' in img) {
+                        img.decode().catch(() => {}).finally(() => {
+                            resolve(img);
+                            if (idx === targetRenderIndex) renderFrame(idx);
+                        });
+                    } else {
+                        resolve(img);
+                        if (idx === targetRenderIndex) renderFrame(idx);
+                    }
+                };
+                img.onerror = () => resolve(null);
+            });
+        }
+
         // Renderizado instantáneo y persistente: NUNCA limpia ni oscurece el lienzo
         function renderFrame(index) {
             if (!ctx) return;
             const idx = Math.min(Math.max(index, 0), TOTAL_FRAMES - 1);
+            targetRenderIndex = idx;
             let img = frameImages[idx];
 
             if (img && img.complete && img.naturalWidth > 0) {
@@ -1002,6 +1040,9 @@
                 currentRenderedIndex = idx;
                 return;
             }
+
+            // Si el fotograma no está listo, solicítalo con máxima prioridad
+            loadFrame(idx);
 
             // Fallback bidireccional al vecino más cercano cargado
             for (let off = 1; off < TOTAL_FRAMES; off++) {
@@ -1025,8 +1066,7 @@
             if (!isTicking) {
                 requestAnimationFrame(() => {
                     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-                    const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
-                    const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+                    const scrollFraction = Math.min(Math.max(scrollTop / cachedMaxScroll, 0), 1);
                     const targetIndex = Math.min(Math.max(Math.round(scrollFraction * (TOTAL_FRAMES - 1)), 0), TOTAL_FRAMES - 1);
 
                     targetRenderIndex = targetIndex;
@@ -1039,63 +1079,71 @@
             }
         }
 
-        // Pre-carga acelerada por GPU con Ráfagas Clave (Keyframe Striding)
+        // Carga progresiva en lotes concurrentes en dirección del scroll
+        async function loadRangeInChunks(startIndex, endIndex, chunkSize = 5) {
+            for (let i = startIndex; i <= endIndex; i += chunkSize) {
+                const chunk = [];
+                for (let c = i; c < Math.min(i + chunkSize, endIndex + 1); c++) {
+                    chunk.push(loadFrame(c));
+                }
+                await Promise.all(chunk);
+            }
+        }
+
+        // Secuencia de precarga inteligente: Prioridad absoluta al recorrido inicial
         async function preloadHeroFrames() {
             if (!canvas || !ctx) return;
             initCanvasSize();
+            updateMaxScroll();
 
-            // 1. Frame 0 inmediato
-            const f0 = new Image();
-            f0.src = getFramePath(0);
-            try { if ('decode' in f0) await f0.decode(); } catch(e) {}
-            frameImages[0] = f0;
+            // 1. Frame 0 inmediato (el más crítico para primer render)
+            await loadFrame(0);
             renderFrame(0);
 
-            // 2. FASE 1: 30 Keyframes cada 4 cuadros (cobertura total de avance/retroceso en < 200ms)
-            const keyIndices = [];
-            for (let i = 0; i < TOTAL_FRAMES; i += 4) {
-                if (i !== 0) keyIndices.push(i);
-            }
-            await Promise.all(keyIndices.map(async (idx) => {
-                const img = new Image();
-                img.src = getFramePath(idx);
-                try { if ('decode' in img) await img.decode(); } catch(e) {}
-                frameImages[idx] = img;
-            }));
-
-            // Si el usuario ya comenzó a desplazarse, refresca inmediatamente
+            // 2. TIER 1 PRIORITARIO: Frames 1 a 29 consecutivos (cubre Hero completo y Soluciones iniciales)
+            // Se cargan de inmediato en paquetes de 5, garantizando 100% de fotogramas sin saltos
+            await loadRangeInChunks(1, 29, 5);
             onScrollDirect();
 
-            // 3. FASE 2: Relleno ordenado de cuadros intermedios en lotes de 8 (sin saturar la red móvil)
-            const remaining = [];
-            for (let i = 0; i < TOTAL_FRAMES; i++) {
-                if (!frameImages[i]) remaining.push(i);
-            }
-
-            const BATCH_SIZE = 8;
-            for (let b = 0; b < remaining.length; b += BATCH_SIZE) {
-                const chunk = remaining.slice(b, b + BATCH_SIZE);
-                await Promise.all(chunk.map(async (idx) => {
-                    const img = new Image();
-                    img.src = getFramePath(idx);
-                    try { if ('decode' in img) await img.decode(); } catch(e) {}
-                    frameImages[idx] = img;
-                    if (idx === targetRenderIndex) renderFrame(idx);
-                }));
-            }
+            // 3. TIERS PROGRESIVOS 2, 3 y 4: Carga continua del resto del sitio en segundo plano
+            await loadRangeInChunks(30, 59, 5);
+            await loadRangeInChunks(60, 89, 5);
+            await loadRangeInChunks(90, 119, 5);
         }
 
         function initHeroExperience() {
             initCanvasSize();
+            updateMaxScroll();
             preloadHeroFrames();
 
+            // Solo escuchamos 'scroll': maneja de forma idéntica y sin saltos tanto el arrastre manual como el impulso libre (fling)
             window.addEventListener('scroll', onScrollDirect, { passive: true });
-            window.addEventListener('touchmove', onScrollDirect, { passive: true });
-            // Al redimensionar la barra móvil, NUNCA reasignar canvas.width (evita borrado a negro)
-            window.addEventListener('resize', onScrollDirect, { passive: true });
-            window.addEventListener('orientationchange', onScrollDirect, { passive: true });
+            
+            // Recalcular dimensiones en resize/rotación sin tocar el búfer del canvas
+            window.addEventListener('resize', () => {
+                updateMaxScroll();
+                onScrollDirect();
+            }, { passive: true });
+            window.addEventListener('orientationchange', () => {
+                updateMaxScroll();
+                onScrollDirect();
+            }, { passive: true });
 
             onScrollDirect();
+
+            // Scroll suave nativo exclusivamente para enlaces de ancla del menú (#servicios, etc.)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        const targetElem = document.querySelector(targetId);
+                        if (targetElem) {
+                            e.preventDefault();
+                            targetElem.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
         }
 
         if (document.readyState === 'loading') {
