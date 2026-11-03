@@ -1044,12 +1044,29 @@
             // Asegurar que el fotograma solicitado se esté cargando
             preloadFrame(idx);
 
-            // REGLA FUNDAMENTAL ANTI-SALTOS:
-            // Si el fotograma solicitado aún no está listo:
-            // 1. Si ya hay un fotograma renderizado en el lienzo, MANTENERLO intacto.
-            //    (JAMÁS saltar a fotogramas futuros, lo que causaba el efecto de salto extraño).
-            // 2. Si es el arranque inicial (currentRenderedIndex === -1), buscar hacia atrás el fotograma más cercano listo.
-            if (currentRenderedIndex === -1) {
+            // NAVEGACIÓN DIRECCIONAL FLUIDA (CERO SALTOS, CERO FRICCIÓN):
+            // Si el fotograma solicitado aún se está decodificando:
+            if (idx > currentRenderedIndex) {
+                // Al bajar: avanzar hasta el fotograma intermedio más reciente que ya esté listo
+                for (let prev = idx - 1; prev > currentRenderedIndex; prev--) {
+                    const pImg = frameImages[prev];
+                    if (pImg && pImg.complete && pImg.naturalWidth > 0) {
+                        ctx.drawImage(pImg, 0, 0);
+                        currentRenderedIndex = prev;
+                        break;
+                    }
+                }
+            } else if (idx < currentRenderedIndex) {
+                // Al subir: retroceder hasta el fotograma intermedio más cercano que ya esté listo
+                for (let next = idx + 1; next < currentRenderedIndex; next++) {
+                    const nImg = frameImages[next];
+                    if (nImg && nImg.complete && nImg.naturalWidth > 0) {
+                        ctx.drawImage(nImg, 0, 0);
+                        currentRenderedIndex = next;
+                        break;
+                    }
+                }
+            } else if (currentRenderedIndex === -1) {
                 for (let prev = idx - 1; prev >= 0; prev--) {
                     const pImg = frameImages[prev];
                     if (pImg && pImg.complete && pImg.naturalWidth > 0) {
@@ -1098,13 +1115,15 @@
             await preloadFrame(0);
             renderFrame(0);
 
-            // 2. PRIORIDAD CRÍTICA INICIAL (Frames 1 al 35):
-            // Cubre el 100% del recorrido Hero hasta después de "Soluciones diseñadas a la medida"
-            // Se descargan todos en paralelo aprovechando HTTP/2 multiplexado en < 200ms
-            await loadBatch(1, 35);
+            // 2. TIER 1A ULTRA-RÁPIDO (Frames 1 al 12, visibles en primeros 250ms):
+            await loadBatch(1, 12);
             onScrollDirect();
 
-            // 3. SEGUNDO PLANO CONTINUO: Resto del sitio cargado progresivamente
+            // 3. TIER 1B PRIORITARIO (Frames 13 al 35, hasta "Soluciones diseñadas a la medida"):
+            await loadBatch(13, 35);
+            onScrollDirect();
+
+            // 4. SEGUNDO PLANO CONTINUO: Resto del sitio cargado progresivamente
             loadBatch(36, 75).then(() => {
                 loadBatch(76, 119);
             });
