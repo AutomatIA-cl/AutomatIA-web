@@ -97,6 +97,22 @@
             -webkit-backface-visibility: hidden;
         }
 
+        /* Video Hero en Loop (Sección 1) con difuminación sutil hacia el primer frame de Sección 2 */
+        #bg-hero-loop-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: opacity, filter;
+        }
+
         /* Overlay semi-transparente sutil para garantizar legibilidad preservando total claridad visual del video */
         #bg-ambient-overlay {
             position: fixed;
@@ -175,13 +191,27 @@
 </head>
 <body class="bg-brand-navyDark text-brand-light font-sans antialiased selection:bg-brand-teal selection:text-brand-navy overflow-x-hidden relative">
 
-    <!-- FONDO FIJO CON SECUENCIA DE FRAMES EN CANVAS (SIN FRICCIÓN, BIDIRECCIONAL Y REACTIVO) -->
+    <!-- FONDO FIJO DOBLE CAPA:
+         1. Capa Hero (z-20): Video en loop "video_hero_looping_city_light" con difuminación sutil al hacer scroll.
+         2. Capa Base (z-10): Secuencia de 120 frames HD 720p de Video_WEB_Hero.mp4 que inicia desde la Sección 2. -->
     <div id="fixed-video-bg" aria-hidden="true">
         <img id="bg-canvas-fallback" 
              src="assets/hero-frames/frame_000.webp" 
              alt="" 
-             class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none">
+             class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none z-0">
         <canvas id="bg-scroll-canvas" class="relative z-10"></canvas>
+        <video id="bg-hero-loop-video"
+               poster="assets/Frame_Hero_City_Light.jpg"
+               autoplay
+               loop
+               muted
+               playsinline
+               webkit-playsinline
+               preload="auto"
+               class="z-20 select-none">
+            <source src="assets/video_hero_looping_city_light.mp4" type="video/mp4">
+            <source src="assets/video_hero_looping_city_ligth.mp4" type="video/mp4">
+        </video>
     </div>
     <div id="bg-ambient-overlay" aria-hidden="true"></div>
 
@@ -243,8 +273,8 @@
         </div>
     </nav>
 
-    <!-- SECCIÓN 1 - HERO -->
-    <section class="relative min-h-screen pt-32 pb-20 flex items-center justify-center">
+    <!-- SECCIÓN 1 - HERO (IMAGEN 1: FONDO VIDEO LOOPING CITY LIGHT HASTA "IMAGINA EL VIAJE") -->
+    <section id="hero-intro" class="relative min-h-screen pt-32 pb-28 sm:pb-36 flex items-center justify-center">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 flex flex-col items-center">
             
             <!-- Pastilla Superior -->
@@ -262,26 +292,35 @@
                 </h1>
             </div>
 
-            <!-- PREGUNTAS EN EL MISMO TAMAÑO, FUENTE Y ESTILO EN CURSIVA (AMBAS IGUAL DE IMPORTANTES) -->
-            <div class="space-y-4 mb-6 max-w-4xl w-full text-center">
+            <!-- PREGUNTAS EN EL MISMO TAMAÑO, FUENTE Y ESTILO EN CURSIVA HASTA "IMAGINA EL VIAJE" -->
+            <div class="space-y-4 mt-2 max-w-4xl w-full text-center">
                 <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] font-normal leading-snug">
                     ¿Eres emprendedor?...
                 </p>
                 <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] font-normal leading-snug">
                     …¿Tienes un negocio, o la idea para uno?
                 </p>
-                <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-brand-gold tracking-tight pt-2 drop-shadow-[0_4px_18px_rgba(245,166,35,0.5)]">
+                <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-brand-gold tracking-tight pt-3 drop-shadow-[0_4px_18px_rgba(245,166,35,0.5)]">
                     ¡¡ Imagina el viaje !!
                 </p>
-                
-                <!-- BAJADA: Acompañamos e impulsamos tu proyecto IGUAL AL TAMAÑO DE LAS PREGUNTAS -->
-                <p class="text-2xl sm:text-3xl md:text-4xl font-serif italic font-normal text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] leading-snug text-center my-3">
-                    Acompañamos e impulsamos tu proyecto.
-                </p>
             </div>
+        </div>
+    </section>
 
-            <!-- TEXTO DESCRIPTIVO CENTRAL (ACTUALIZADO EN DOS LÍNEAS SEGÚN REQUERIMIENTO) -->
-            <div class="max-w-4xl w-full text-center mb-10 glass-panel p-6 sm:p-8 rounded-2xl border border-brand-teal/30">
+    <!-- ZONA DE TRANSICIÓN CON AIRE Y DIFUMINACIÓN SUTIL HACIA EL PRIMER FRAME DE LA SECCIÓN 2 -->
+    <div id="hero-transition-spacer" class="h-32 sm:h-44 md:h-52 pointer-events-none" aria-hidden="true"></div>
+
+    <!-- SECCIÓN 2 - IMPULSO DE PROYECTO (IMAGEN 2: INICIO DEL FONDO VIDEO_WEB_HERO 120 FRAMES HD 720p) -->
+    <section id="impulso-proyecto" class="relative min-h-[85vh] py-28 sm:py-36 flex items-center justify-center">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 flex flex-col items-center w-full">
+
+            <!-- TÍTULO: Acompañamos e impulsamos tu proyecto (Convertido en título con +30% de tamaño de fuente) -->
+            <h2 class="text-[1.95rem] sm:text-[2.45rem] md:text-[2.95rem] lg:text-[3.25rem] font-serif italic font-semibold text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.85)] leading-tight text-center mb-10 max-w-4xl">
+                Acompañamos e impulsamos tu proyecto.
+            </h2>
+
+            <!-- TEXTO DESCRIPTIVO CENTRAL (EN DOS LÍNEAS) -->
+            <div class="max-w-4xl w-full text-center mb-12 glass-panel p-6 sm:p-8 rounded-2xl border border-brand-teal/30">
                 <p class="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed">
                     Tú diriges, nosotros construimos, la IA trabaja para ti.
                 </p>
@@ -290,8 +329,8 @@
                 </p>
             </div>
 
-            <!-- Botones CTA Hero -->
-            <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-12">
+            <!-- Botones CTA -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-14">
                 <button onclick="openModal()" class="w-full sm:w-auto bg-brand-gold hover:bg-yellow-500 text-brand-navy font-bold px-8 py-4 rounded-sm text-sm uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(245,166,35,0.4)] hover:shadow-[0_0_35px_rgba(245,166,35,0.6)] active:scale-95">
                     Diagnóstico gratuito →
                 </button>
@@ -313,8 +352,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 2 - SOLUCIONES Y SERVICIOS -->
-    <section id="servicios" class="py-24 relative border-t border-brand-teal/20">
+    <!-- SECCIÓN 2 - SOLUCIONES Y SERVICIOS (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="servicios" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-16">
@@ -393,8 +432,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 3 - REGALO EXCLUSIVO POR TIEMPO LIMITADO -->
-    <section id="regalo" class="py-16 relative border-y border-brand-gold/50 overflow-hidden bg-brand-navyDark/85 backdrop-blur-md shadow-2xl">
+    <!-- SECCIÓN 3 - REGALO EXCLUSIVO POR TIEMPO LIMITADO (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="regalo" class="py-20 sm:py-24 my-6 sm:my-10 relative border-y border-brand-gold/50 overflow-hidden bg-brand-navyDark/85 backdrop-blur-md shadow-2xl">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
             <div class="text-center md:text-left flex-1">
                 <span class="inline-block px-3 py-1 bg-brand-gold/20 border border-brand-gold/50 text-brand-gold text-[10px] font-bold uppercase tracking-widest rounded-full mb-4 animate-pulse">
@@ -425,8 +464,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN: 01. QUIÉNES SOMOS -->
-    <section id="nosotros" class="py-24 relative border-t border-brand-teal/20">
+    <!-- SECCIÓN: 01. QUIÉNES SOMOS (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="nosotros" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Logo institucional en Quiénes Somos -->
@@ -450,8 +489,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN: 02. METODOLOGÍA -->
-    <section id="metodologia" class="py-24 relative border-t border-brand-teal/20">
+    <!-- SECCIÓN: 02. METODOLOGÍA (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="metodologia" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-16">
@@ -523,8 +562,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN: 03. PORTAFOLIO -->
-    <section id="portafolio" class="py-24 relative border-t border-brand-teal/20">
+    <!-- SECCIÓN: 03. PORTAFOLIO (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="portafolio" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-16">
@@ -631,8 +670,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 4 - GOBERNANZA -->
-    <section id="gobernanza" class="py-24 relative border-t border-brand-teal/20">
+    <!-- SECCIÓN 4 - GOBERNANZA (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="gobernanza" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="text-center max-w-3xl mx-auto mb-16">
@@ -702,8 +741,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 5 - DIAGNÓSTICO GRATUITO Y FORMULARIO -->
-    <section id="contacto" class="py-24 relative border-t border-brand-teal/20">
+    <!-- SECCIÓN 5 - DIAGNÓSTICO GRATUITO Y FORMULARIO (+15% DE AIRE EN TRANSICIÓN) -->
+    <section id="contacto" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
             <h2 class="text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-serif italic font-normal text-white mb-6 leading-tight drop-shadow-[0_4px_25px_rgba(0,0,0,0.85)]">
@@ -974,6 +1013,8 @@
            =========================================================== */
         const canvas = document.getElementById('bg-scroll-canvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
+        const heroLoopVideo = document.getElementById('bg-hero-loop-video');
+        const impulsoSection = document.getElementById('impulso-proyecto');
         const TOTAL_FRAMES = 120;
         const FRAME_WIDTH = 1280;
         const FRAME_HEIGHT = 720;
@@ -1078,14 +1119,62 @@
             }
         }
 
-        // Sincronización Direct-Drive 1:1 fluida y reactiva
+        // Sincronización Direct-Drive 1:1 con Difuminación Sutil entre Sección Hero (Video Loop) y Sección 2 (120 Frames HD)
         function onScrollDirect() {
             if (!isTicking) {
                 requestAnimationFrame(() => {
                     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-                    const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
-                    const scrollFraction = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
-                    const targetIndex = Math.min(Math.max(Math.round(scrollFraction * (TOTAL_FRAMES - 1)), 0), TOTAL_FRAMES - 1);
+                    const vh = window.innerHeight || 800;
+                    const maxScroll = Math.max(document.documentElement.scrollHeight - vh, 1);
+
+                    // Posición de inicio de la Sección 2 ("Acompañamos e impulsamos tu proyecto.")
+                    const sec2Top = impulsoSection ? impulsoSection.offsetTop : vh;
+
+                    // ZONA DE DIFUMINACIÓN SUTIL (CROSSFADE):
+                    // Inicia al salir de "¡¡ Imagina el viaje !!" (22% de sec2Top) y culmina suavemente
+                    // justo ANTES de que el primer frame de la Sección 2 comience su avance (86% de sec2Top).
+                    const fadeStart = sec2Top * 0.22;
+                    const fadeEnd = Math.max(sec2Top * 0.86, fadeStart + 160);
+
+                    if (heroLoopVideo) {
+                        if (scrollTop <= fadeStart) {
+                            heroLoopVideo.style.opacity = '1';
+                            heroLoopVideo.style.filter = 'blur(0px)';
+                            heroLoopVideo.style.visibility = 'visible';
+                            if (heroLoopVideo.paused) {
+                                heroLoopVideo.play().catch(() => {});
+                            }
+                        } else if (scrollTop >= fadeEnd) {
+                            heroLoopVideo.style.opacity = '0';
+                            heroLoopVideo.style.filter = 'blur(8px)';
+                            heroLoopVideo.style.visibility = 'hidden';
+                            if (!heroLoopVideo.paused) {
+                                heroLoopVideo.pause();
+                            }
+                        } else {
+                            // Interpolación Smoothstep para difuminación progresiva sin cortes abruptos
+                            const rawFade = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
+                            const smoothFade = rawFade * rawFade * (3 - 2 * rawFade);
+                            const opacityVal = (1 - smoothFade).toFixed(3);
+                            const blurVal = (smoothFade * 8).toFixed(2);
+                            heroLoopVideo.style.opacity = opacityVal;
+                            heroLoopVideo.style.filter = `blur(${blurVal}px)`;
+                            heroLoopVideo.style.visibility = 'visible';
+                            if (heroLoopVideo.paused) {
+                                heroLoopVideo.play().catch(() => {});
+                            }
+                        }
+                    }
+
+                    // AVANCE DE LOS 120 FOTOGRAMAS HD 720p DESDE LA SECCIÓN 2 EN ADELANTE:
+                    // Durante la Sección 1 y la transición, el lienzo permanece listo en el Frame 0 (frame_000.webp).
+                    // Al completarse la difuminación en la Sección 2, avanza y retrocede 1:1 con el scroll.
+                    let targetIndex = 0;
+                    if (scrollTop > fadeEnd) {
+                        const scrubRange = Math.max(maxScroll - fadeEnd, 1);
+                        const scrollFraction = Math.min(Math.max((scrollTop - fadeEnd) / scrubRange, 0), 1);
+                        targetIndex = Math.min(Math.max(Math.round(scrollFraction * (TOTAL_FRAMES - 1)), 0), TOTAL_FRAMES - 1);
+                    }
 
                     targetRenderIndex = targetIndex;
                     if (targetIndex !== currentRenderedIndex) {
@@ -1131,6 +1220,11 @@
 
         function initHeroExperience() {
             initCanvasSize();
+            if (heroLoopVideo) {
+                heroLoopVideo.muted = true;
+                heroLoopVideo.playsInline = true;
+                heroLoopVideo.play().catch(() => {});
+            }
             preloadHeroFrames();
 
             window.addEventListener('scroll', onScrollDirect, { passive: true });
