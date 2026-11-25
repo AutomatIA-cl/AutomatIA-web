@@ -407,19 +407,22 @@
     <section id="servicios" class="py-28 sm:py-32 relative border-t border-brand-teal/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="text-center max-w-4xl mx-auto mb-14">
                 <span class="text-xs uppercase tracking-widest text-brand-teal font-bold block mb-2">SECCIÓN 2 · NUESTRAS SOLUCIONES</span>
-                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-4">
+                <h2 class="text-3xl sm:text-5xl font-serif font-bold text-white mb-6">
                     Soluciones diseñadas a la medida y <span class="text-brand-gold">de bajo costo</span>
                 </h2>
-                <p class="text-brand-silver text-base sm:text-lg font-light leading-relaxed">
-                    Deja de perder ventas por respuestas tardías o procesos manuales. Construimos ecosistemas inteligentes que capturan clientes, automatizan tu operación y multiplican tu capacidad sin inflar tus costos fijos.
-                </p>
+                <div class="glass-panel rounded-2xl px-6 py-5 sm:px-8 sm:py-6 border border-brand-teal/30 max-w-3xl mx-auto shadow-xl">
+                    <p class="text-white text-base sm:text-lg font-light leading-relaxed">
+                        “Deja de perder ventas por respuestas tardías o procesos manuales.<br class="hidden sm:inline">
+                        Construimos ecosistemas inteligentes que capturan clientes, automatizan la venta y multiplican tu capacidad sin inflar tus costos.”
+                    </p>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 
-                <!-- COLUMNA 1: Emprendedores & Nuevos Negocios (Ley de Miller: Chunking en 3 bloques) -->
+                <!-- COLUMNA 1: Emprendedores & Nuevos Negocios (Botones desplegables para recorrido limpio) -->
                 <div class="glass-panel p-8 sm:p-10 rounded-2xl border-t-4 border-t-brand-teal hover:shadow-[0_0_35px_rgba(0,184,169,0.25)] transition-all flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -433,35 +436,62 @@
                             El ecosistema inicial para capturar valor, clientes y salir al mercado con fuerza.
                         </p>
                         
-                        <div class="space-y-5 text-brand-silver text-sm">
-                            <!-- Bloque 1 -->
-                            <div class="bg-brand-navyDark/40 p-4 rounded-xl border border-brand-teal/15">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-teal block mb-2">1. Identidad &amp; Presencia Digital</span>
-                                <ul class="space-y-2.5">
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Identidad de Marca:</strong> Logo, colorimetría, gráfica, eslogan y bajadas</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi nueva o primera WEB</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Mi nueva o primer Landing Page con embudo de venta para captura de Leads</span></li>
-                                </ul>
+                        <div class="space-y-3.5 text-brand-silver text-sm">
+                            <!-- Botón Desplegable 1 -->
+                            <div class="rounded-xl border border-brand-teal/25 bg-brand-navyDark/55 overflow-hidden transition-all">
+                                <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                                    <span class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-brand-teal">1. Identidad de Marca &amp; Presencia Digital</span>
+                                    <span class="accordion-icon flex-shrink-0 w-6 h-6 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </span>
+                                </button>
+                                <div class="accordion-content hidden px-4 pb-4 pt-1 border-t border-brand-teal/15">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm leading-relaxed">
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Identidad de Marca:</strong> Logo, colorimetría, gráfica, eslogan, frases de bajada, emoji.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Mi nueva o primera WEB con formato Landing Page:</strong> Lista para hacer captura de clientes y empezar a vender. Disponible también con arquitectura e-commerce para cargar el catálogo de tus productos o servicios.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>WhatsApp Business</strong> integrado a tu WEB para iniciar una conversación.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Creación &amp; Elaboración del Plan de mantenimiento de RRSS</strong> (Facebook, IG, TikTok, YouTube, LinkedIn).</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Elaboración de Estrategia de Marketing Digital:</strong> Google, Meta y Mailing Masivo.</span></li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <!-- Bloque 2 -->
-                            <div class="bg-brand-navyDark/40 p-4 rounded-xl border border-brand-teal/15">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-teal block mb-2">2. Captación &amp; Ventas Automatizadas 24/7</span>
-                                <ul class="space-y-2.5">
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Marketing Digital &amp; Herramientas de Neuromarketing</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>WhatsApp Business Automatizado e integrado a tu WEB</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Ecommerce y Estrategia Digital de Ventas</span></li>
-                                </ul>
+                            <!-- Botón Desplegable 2 -->
+                            <div class="rounded-xl border border-brand-teal/25 bg-brand-navyDark/55 overflow-hidden transition-all">
+                                <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                                    <span class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-brand-teal">2. Captación &amp; Ventas Automatizadas 24/7</span>
+                                    <span class="accordion-icon flex-shrink-0 w-6 h-6 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </span>
+                                </button>
+                                <div class="accordion-content hidden px-4 pb-4 pt-1 border-t border-brand-teal/15">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm leading-relaxed">
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Herramientas de Neuromarketing &amp; Conversación Persuasiva</strong> integradas al sistema de ventas para motivar la acción de clientes.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Configuración de Agente conversacional</strong> integrado al formulario de contacto e-mail y al WhatsApp Business.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Base de Datos actualizada en tiempo real</strong> con la recopilación automatizada de la información del formulario de contacto e-mail.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Base de Datos de respaldo</strong> con las conversaciones del WhatsApp Business.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Ecommerce y Estrategia Digital de Ventas.</strong></span></li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <!-- Bloque 3 -->
-                            <div class="bg-brand-navyDark/40 p-4 rounded-xl border border-brand-teal/15">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-teal block mb-2">3. Tráfico, Redes &amp; Posicionamiento</span>
-                                <ul class="space-y-2.5">
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Agentes automatizados para generar presencia en Redes Sociales y LinkedIn</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Plan de Community Manager</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span>Presencia en Google y en Meta con SEO y ADS</span></li>
-                                </ul>
+                            <!-- Botón Desplegable 3 -->
+                            <div class="rounded-xl border border-brand-teal/25 bg-brand-navyDark/55 overflow-hidden transition-all">
+                                <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                                    <span class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-brand-teal">3. Tráfico, Redes &amp; Posicionamiento</span>
+                                    <span class="accordion-icon flex-shrink-0 w-6 h-6 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </span>
+                                </button>
+                                <div class="accordion-content hidden px-4 pb-4 pt-1 border-t border-brand-teal/15">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm leading-relaxed">
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Agente CM (Community Manager) automatizado</strong> para ejecutar el plan de mantenimiento y generar presencia en Redes Sociales y LinkedIn.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Ejecución de la Estrategia de Marketing Digital:</strong> Google, Meta y Mailing Masivo.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Configuración de agente automatizado</strong> para anuncios y seguimiento de campañas en Google Ads y en Meta Ads.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Agente de Gestión de Bases de Datos:</strong> Reporta por ejemplo, alertas de fechas próximas para ofrecer nuevos pedidos a los clientes. Permite comparar la cantidad vendida contra el stock disponible.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-teal mt-0.5 font-bold">✓</span> <span><strong>Agente de Stock Disponible:</strong> Registra compras y ventas que te permiten gestionar tu inventario y tomar decisiones.</span></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -471,7 +501,7 @@
                     </button>
                 </div>
 
-                <!-- COLUMNA 2: Micro & Pymes (Ley de Miller: Chunking en 3 bloques) -->
+                <!-- COLUMNA 2: Servicios de Escalabilidad y Automatización (Botones desplegables) -->
                 <div class="glass-panel-gold p-8 sm:p-10 rounded-2xl border-t-4 border-t-brand-gold hover:shadow-[0_0_35px_rgba(245,166,35,0.25)] transition-all flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -479,38 +509,59 @@
                             <span class="bg-brand-gold/20 text-brand-gold text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase border border-brand-gold/40">IA &amp; Procesos</span>
                         </div>
                         <h3 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2 uppercase tracking-wide">
-                            Servicios Micro <br><span class="text-brand-gold">&amp; Pymes</span>
+                            Servicios de Escalabilidad <br><span class="text-brand-gold">y Automatización</span>
                         </h3>
                         <p class="text-brand-silver/90 text-sm font-light mb-6">
                             Arquitectura operativa e Inteligencia Artificial para escalar sin fricción.
                         </p>
                         
-                        <div class="space-y-5 text-brand-silver text-sm">
-                            <!-- Bloque 1 -->
-                            <div class="bg-brand-navyDark/40 p-4 rounded-xl border border-brand-gold/20">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-gold block mb-2">1. Diagnóstico &amp; Victoria Rápida</span>
-                                <ul class="space-y-2.5">
-                                    <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Diagnóstico de Automatización de Procesos</strong> (Ventas, Inventarios, Finanzas, Producción, Logística, Recursos Humanos, Atención Clientes).</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Automatización de Proceso Único.</strong></span></li>
-                                </ul>
+                        <div class="space-y-3.5 text-brand-silver text-sm">
+                            <!-- Botón Desplegable 1 -->
+                            <div class="rounded-xl border border-brand-gold/30 bg-brand-navyDark/55 overflow-hidden transition-all">
+                                <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-brand-gold/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-gold">
+                                    <span class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-brand-gold">1. Diagnóstico &amp; Victoria Rápida</span>
+                                    <span class="accordion-icon flex-shrink-0 w-6 h-6 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold flex items-center justify-center transition-transform duration-300">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </span>
+                                </button>
+                                <div class="accordion-content hidden px-4 pb-4 pt-1 border-t border-brand-gold/15">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm leading-relaxed">
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Diagnóstico de Automatización de Proceso Único</strong> (Ventas, Inventarios, Finanzas, Producción, Logística, Recursos Humanos, Atención Clientes).</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Diagnóstico de Automatización de Procesos Integrados.</strong></span></li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <!-- Bloque 2 -->
-                            <div class="bg-brand-navyDark/40 p-4 rounded-xl border border-brand-gold/20">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-gold block mb-2">2. Agentes IA &amp; Sistema Operativo</span>
-                                <ul class="space-y-2.5">
-                                    <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Agentes de IA a tu Medida</strong> para cada proceso.</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Génesis Operativa</strong> (Desde cero a sistema operativo completo).</span></li>
-                                </ul>
+                            <!-- Botón Desplegable 2 -->
+                            <div class="rounded-xl border border-brand-gold/30 bg-brand-navyDark/55 overflow-hidden transition-all">
+                                <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-brand-gold/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-gold">
+                                    <span class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-brand-gold">2. Agentes IA &amp; Sistema Operativo</span>
+                                    <span class="accordion-icon flex-shrink-0 w-6 h-6 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold flex items-center justify-center transition-transform duration-300">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </span>
+                                </button>
+                                <div class="accordion-content hidden px-4 pb-4 pt-1 border-t border-brand-gold/15">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm leading-relaxed">
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Agentes de IA a tu Medida</strong> para cada proceso.</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Génesis Operativa</strong> (Desde cero a sistema operativo automatizado completo).</span></li>
+                                    </ul>
+                                </div>
                             </div>
 
-                            <!-- Bloque 3 -->
-                            <div class="bg-brand-navyDark/40 p-4 rounded-xl border border-brand-gold/20">
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-brand-gold block mb-2">3. Escala Continua &amp; Business Intelligence</span>
-                                <ul class="space-y-2.5">
-                                    <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Stack Automatización Empresarial</strong> (Acompañamiento escalable a la medida de tu Negocio).</span></li>
-                                    <li class="flex items-start gap-3"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Arquitectura y Tecnología de Business Intelligence</strong> (Gobernanza, gestión y análisis de datos en tiempo real para una toma de decisiones eficiente).</span></li>
-                                </ul>
+                            <!-- Botón Desplegable 3 -->
+                            <div class="rounded-xl border border-brand-gold/30 bg-brand-navyDark/55 overflow-hidden transition-all">
+                                <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-brand-gold/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-gold">
+                                    <span class="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-brand-gold">3. Escala Continua &amp; Business Intelligence</span>
+                                    <span class="accordion-icon flex-shrink-0 w-6 h-6 rounded-full bg-brand-gold/15 border border-brand-gold/40 text-brand-gold flex items-center justify-center transition-transform duration-300">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </span>
+                                </button>
+                                <div class="accordion-content hidden px-4 pb-4 pt-1 border-t border-brand-gold/15">
+                                    <ul class="space-y-2.5 text-xs sm:text-sm leading-relaxed">
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Stack Automatización Empresarial</strong> (Acompañamiento escalable a la medida de tu Negocio).</span></li>
+                                        <li class="flex items-start gap-2.5"><span class="text-brand-gold mt-0.5 font-bold">★</span> <span><strong>Arquitectura y Tecnología de Business Intelligence</strong> (Gobernanza, gestión y análisis de datos en tiempo real para una toma de decisiones eficiente).</span></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -531,10 +582,10 @@
                     Regalo Exclusivo por Tiempo Limitado
                 </span>
                 <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mb-4 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-                    Obtén <span class="text-brand-teal font-extrabold uppercase">GRATIS</span> tu Primera <span class="text-brand-gold border-b-2 border-brand-gold">Máquina de Ventas</span>
+                    Obtén <span class="text-brand-teal font-extrabold uppercase">GRATIS</span> tu Primera <span class="text-brand-gold border-b-2 border-brand-gold">WEB en formato Landing de Ventas</span>
                 </h2>
                 <p class="text-brand-silver text-sm sm:text-base font-light max-w-lg mx-auto md:mx-0 leading-relaxed">
-                    Comprueba el poder de AutomatIA hoy mismo sin pagar un centavo. En menos de <strong class="text-white font-semibold">2 minutos</strong>, nuestro motor de IA construye para ti una Landing Page persuasiva con arquitectura AIDA, embudo a WhatsApp y código listo para publicar.
+                    Comprueba el poder de AutomatIA hoy mismo sin pagar un solo peso. En menos de <strong class="text-white font-semibold">2 minutos</strong>, nuestro motor de IA construye para ti una Landing Page persuasiva con arquitectura AIDA, embudo a WhatsApp y código listo para publicar.
                 </p>
             </div>
             
@@ -610,39 +661,110 @@
                 </div>
             </div>
 
-            <!-- 8 Dimensiones Cards (Vidrios Difuminados Aclarados) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">01 · Comprender</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Antes de proponer, escuchamos. Analizamos tu contexto estratégico, tu cultura interna y las áreas donde la IA puede generar valor real.</p>
+            <!-- 8 Dimensiones (Etiquetas visuales interactivas tipo botón que despliegan su contenido al presionar) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-12 items-start">
+                <!-- 01 · Comprender -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">01 · Comprender</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Antes de proponer, escuchamos. Analizamos tu contexto estratégico, tu cultura interna y las áreas donde la IA puede generar valor real.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">02 · Diagnosticar</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Evaluamos la madurez digital, la calidad de tus datos y las brechas existentes antes de construir cualquier solución.</p>
+
+                <!-- 02 · Diagnosticar -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">02 · Diagnosticar</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Evaluamos la madurez digital, la calidad de tus datos y las brechas existentes antes de construir cualquier solución.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">03 · Diseñar</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Definimos juntos los casos de uso, la arquitectura de datos y el mapa de procesos optimizados.</p>
+
+                <!-- 03 · Diseñar -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">03 · Diseñar</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Definimos juntos los casos de uso, la arquitectura de datos y el mapa de procesos optimizados.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">04 · Intervenir</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Preparamos a las personas y los procesos. La tecnología sin gestión del cambio solo genera resistencia.</p>
+
+                <!-- 04 · Intervenir -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">04 · Intervenir</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Preparamos a las personas y los procesos. La tecnología sin gestión del cambio solo genera resistencia.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">05 · Ejecutar</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Desplegamos herramientas, modelos y agentes de IA garantizando que el negocio no se detenga.</p>
+
+                <!-- 05 · Ejecutar -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">05 · Ejecutar</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Desplegamos herramientas, modelos y agentes de IA garantizando que el negocio no se detenga.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">06 · Medir</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Monitoreamos métricas concretas: eficiencia operativa, tiempo recuperado, costo reducido y ROI real.</p>
+
+                <!-- 06 · Medir -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">06 · Medir</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Monitoreamos métricas concretas: eficiencia operativa, tiempo recuperado, costo reducido y ROI real.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">07 · Reflexionar</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Analizamos los resultados contigo para decidir qué ajustar, qué escalar y qué eliminar.</p>
+
+                <!-- 07 · Reflexionar -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">07 · Reflexionar</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Analizamos los resultados contigo para decidir qué ajustar, qué escalar y qué eliminar.</p>
+                    </div>
                 </div>
-                <div class="glass-panel p-6 rounded-xl hover:border-brand-teal/50 transition-all">
-                    <span class="text-brand-gold text-xs font-bold block mb-1">08 · Reconfigurar</span>
-                    <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Ajustamos los modelos y estrategias según lo aprendido para reiniciar el ciclo de mejora continua.</p>
+
+                <!-- 08 · Reconfigurar -->
+                <div class="glass-panel rounded-xl border border-brand-teal/25 hover:border-brand-teal/60 transition-all overflow-hidden">
+                    <button type="button" onclick="toggleAccordion(this)" aria-expanded="false" class="w-full flex items-center justify-between gap-2 px-5 py-4 text-left hover:bg-brand-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal">
+                        <span class="text-brand-gold text-xs sm:text-[13px] font-bold uppercase tracking-wider">08 · Reconfigurar</span>
+                        <span class="accordion-icon flex-shrink-0 w-5 h-5 rounded-full bg-brand-teal/15 border border-brand-teal/35 text-brand-teal flex items-center justify-center transition-transform duration-300">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </button>
+                    <div class="accordion-content hidden px-5 pb-4 pt-2 border-t border-brand-teal/15">
+                        <p class="text-brand-silver/90 text-xs font-light leading-relaxed">Ajustamos los modelos y estrategias según lo aprendido para reiniciar el ciclo de mejora continua.</p>
+                    </div>
                 </div>
             </div>
 
@@ -1558,6 +1680,19 @@
         function resetForm() {
             formSuccess.classList.add('hidden');
             funnelForm.reset();
+        }
+
+        // Controlador universal de bloques desplegables (Soluciones y Metodología 8 Dimensiones)
+        function toggleAccordion(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('.accordion-icon');
+            if (!content) return;
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', String(!isExpanded));
+            content.classList.toggle('hidden');
+            if (icon) {
+                icon.classList.toggle('rotate-180');
+            }
         }
     </script>
 
